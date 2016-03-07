@@ -1,0 +1,53 @@
+language: python
+
+sudo: required
+dist: trusty
+
+compiler: clang
+
+matrix:
+  include:
+    - os: linux
+      python: 2.7
+    - os: linux
+      python: 3.3
+    - os: linux
+      python: 3.4
+    - os: linux
+      python: 3.5
+    - os: linux
+      python: 3.5-dev
+    - os: linux
+      python: nightly
+    - os: linux
+      python: pypy
+    - os: linux
+      python: pypy3
+    - os: osx
+      language: generic
+      python: python
+    - os: osx
+      language: generic
+      python: python3
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.6
+    packages:
+      - llvm-3.6
+      - clang-3.6
+      - libpcap-dev
+
+before_script:
+  - .travis/install_dublintraceroute.sh
+
+script:
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make VERBOSE=1
+
+after_script:
+  - python -m dublintraceroute --help

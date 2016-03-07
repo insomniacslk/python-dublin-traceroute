@@ -113,9 +113,6 @@ static PyMethodDef DublinTracerouteMethods[] =
 
 static PyMethodDef ModuleMethods[] = { {NULL} };
 
-#ifdef __cplusplus
-extern "C"
-#endif
 PyMODINIT_FUNC
 init_dublintraceroute(void)
 {
