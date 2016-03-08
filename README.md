@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/insomniacslk/python-dublin-traceroute.svg?branch=master)](https://travis-ci.org/insomniacslk/python-dublin-traceroute)
+
 # What
 
 This repository contains the Python bindings for [Dublin
