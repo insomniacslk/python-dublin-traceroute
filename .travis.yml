@@ -50,4 +50,4 @@ script:
   - make VERBOSE=1
 
 after_script:
-  - python -m dublintraceroute --help
+  - python -m dublintraceroute --plot .travis/bad.horse.json
