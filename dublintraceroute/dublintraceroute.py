@@ -99,7 +99,7 @@ def to_graphviz(traceroute, no_rtt=False):
 
     # create a dummy first node to add the source host to the graph
     # FIXME this approach sucks
-    for flow, hops in traceroute['flows'].iteritems():
+    for flow, hops in traceroute['flows'].items():
         src_ip = hops[0]['sent']['ip']['src']
         firsthop = {}
         hops = [firsthop] + hops
