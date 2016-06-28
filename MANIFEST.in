@@ -1,7 +1,5 @@
-setup.cfg
-setup.py
-dublintraceroute/__init__.py
-dublintraceroute/__main__.py
-dublintraceroute/dublintraceroute.py
-dublintraceroute/py2/_dublintraceroute.cc
-dublintraceroute/py3/_dublintraceroute.cc
+include setup.cfg
+include setup.py
+include dublintraceroute/*.py
+include dublintraceroute/py2/*.cc
+include dublintraceroute/py3/*.cc
