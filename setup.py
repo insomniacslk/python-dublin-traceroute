@@ -36,6 +36,7 @@ setup(
     license='BSD',
     url='https://www.dublin-traceroute.net',
     download_url='https://github.com/insomniacslk/python-dublin-traceroute/archive/0.1.tar.gz',
+    platforms=['linux', 'darwin'],
     ext_modules=[dublintraceroute],
     keywords=['traceroute', 'networking', 'multipath', 'nat'],
     classifiers=[],
