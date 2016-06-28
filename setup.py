@@ -27,13 +27,16 @@ dublintraceroute = Extension(
 
 
 setup(
-    name='DublinTraceroute',
+    name='dublintraceroute',
+    packages=['dublintraceroute'],
     version='0.1',
     author='Andrea Barberio',
     author_email='<insomniac@slackware.it>',
     description='NAT-aware multipath traceroute',
     url='https://www.dublin-traceroute.net',
-    packages=['dublintraceroute'],
+    download_url='https://github.com/insomniacslk/python-dublin-traceroute/archive/0.1.tar.gz',
     install_requires=['tabulate'],
     ext_modules=[dublintraceroute],
+    keywords=['traceroute', 'networking', 'multipath', 'nat'],
+    classifiers=[],
 )
