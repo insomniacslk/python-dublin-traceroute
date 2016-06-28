@@ -33,6 +33,7 @@ setup(
     author='Andrea Barberio',
     author_email='<insomniac@slackware.it>',
     description='NAT-aware multipath traceroute',
+    license='BSD',
     url='https://www.dublin-traceroute.net',
     download_url='https://github.com/insomniacslk/python-dublin-traceroute/archive/0.1.tar.gz',
     ext_modules=[dublintraceroute],
