@@ -19,7 +19,7 @@ You need the following dependencies:
 See the following sections for system-specific instructions.
 
 
-### Debian
+### Prerequisites on Debian
 
 * `libtins` is available in the `testing` repo
 * `libdublintraceroute` is available in the `experimental` repo
@@ -29,15 +29,7 @@ Once you have enabled those repos, install the dependencies as root:
 apt-get install libpcap-dev libjsoncpp-dev libtins-dev libdublintraceroute-dev
 ```
 
-Then install the Python module as root:
-
-```bash
-python setup.py install 
-```
-
-If you do not want to install the module as root, just add `--user` to the setup.py invocation.
-
-### OS X
+### Prerequisites on OS X
 
 * `libtins` and `jsoncpp` are available in brew
 * `libpcap` is already installed on OS X
@@ -50,7 +42,11 @@ brew install https://raw.githubusercontent.com/insomniacslk/homebrew/master/Libr
 
 If you prefer to install `libdublintraceroute` from source instead, see https://dublin-traceroute.net .
 
-Then install the Python module as root:
+### Installing dublintraceroute
+
+Onche the prerequisites are installed, there are two ways to install `dublintraceroute` itself. From source, or from PyPI (i.e. using `pip` or `easy_install`)
+
+#### From source
 
 ```bash
 python setup.py install 
@@ -58,6 +54,11 @@ python setup.py install
 
 If you do not want to install the module as root, just add `--user` to the setup.py invocation.
 
+#### From PyPI
+
+```bash
+pip install dublintraceroute  # use pip3 for the Python3 version
+```
 
 ## To run
 
