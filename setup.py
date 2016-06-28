@@ -31,7 +31,7 @@ setup(
     packages=['dublintraceroute'],
     version='0.1',
     author='Andrea Barberio',
-    author_email='<insomniac@slackware.it>',
+    author_email='insomniac@slackware.it',
     description='NAT-aware multipath traceroute',
     license='BSD',
     url='https://www.dublin-traceroute.net',
