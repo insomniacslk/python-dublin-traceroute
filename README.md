@@ -8,6 +8,59 @@ these bindings you have first to install Dublin Traceroute.
 
 # How
 
+## To install
+
+You need the following dependencies:
+* libpcap
+* libtins
+* jsoncpp
+* libdublintraceroute
+
+See the following sections for system-specific instructions.
+
+
+### Debian
+
+* `libtins` is available in the `testing` repo
+* `libdublintraceroute` is available in the `experimental` repo
+
+Once you have enabled those repos, install the dependencies as root:
+```bash
+apt-get install libpcap-dev libjsoncpp-dev libtins-dev libdublintraceroute-dev
+```
+
+Then install the Python module as root:
+
+```bash
+python setup.py install 
+```
+
+If you do not want to install the module as root, just add `--user` to the setup.py invocation.
+
+### OS X
+
+* `libtins` and `jsoncpp` are available in brew
+* `libpcap` is already installed on OS X
+* `libdublintraceroute` would like to be in brew, but the authors say that we don't have enough stars to accept the formula. Hence it can be installed from source, or using the formula I wrote. See below or see https://github.com/insomniacslk/dublin-traceroute/blob/master/documentation/readme/README.md#building-on-os-x.
+
+```bash
+brew install jsoncpp libtins
+brew install https://raw.githubusercontent.com/insomniacslk/homebrew/master/Library/Formula/dublin-traceroute.rb
+```
+
+If you prefer to install `libdublintraceroute` from source instead, see https://dublin-traceroute.net .
+
+Then install the Python module as root:
+
+```bash
+python setup.py install 
+```
+
+If you do not want to install the module as root, just add `--user` to the setup.py invocation.
+
+
+## To run
+
 Let's try to run the same traceroute in the CLI example, but this time using
 Python. Remember that you need root permissions in this case, or you need to
 manually set the CAP_NET_RAW capability to your Python interpreter (which is not
