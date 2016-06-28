@@ -4,9 +4,9 @@ from distutils.core import setup, Extension
 
 
 if sys.version_info.major >= 3:
-    sources = ['${CMAKE_CURRENT_SOURCE_DIR}/dublintraceroute/py3/_dublintraceroute.cc']
+    sources = ['dublintraceroute/py3/_dublintraceroute.cc']
 else:
-    sources = ['${CMAKE_CURRENT_SOURCE_DIR}/dublintraceroute/py2/_dublintraceroute.cc']
+    sources = ['dublintraceroute/py2/_dublintraceroute.cc']
 
 
 dublintraceroute = Extension(
@@ -27,13 +27,12 @@ dublintraceroute = Extension(
 
 setup(
     name='DublinTraceroute',
-    version='${PACKAGE_VERSION}',
+    version='0.1',
     author='Andrea Barberio',
     author_email='<insomniac@slackware.it>',
     description='NAT-aware multipath traceroute',
     url='https://www.dublin-traceroute.net',
     packages=['dublintraceroute'],
-    package_dir={'': '${CMAKE_CURRENT_SOURCE_DIR}'},
     install_requires=['tabulate'],
     ext_modules=[dublintraceroute],
 )
