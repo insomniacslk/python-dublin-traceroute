@@ -25,7 +25,7 @@ See the following sections for system-specific instructions.
 ### Prerequisites on Debian
 
 * `libtins` is available in the `testing` repo
-* `libdublintraceroute` is available in the `experimental` repo
+* `libdublintraceroute` is available in the `unstable` repo
 
 Once you have enabled those repos, install the dependencies as root:
 ```bash
