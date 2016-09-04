@@ -24,7 +24,7 @@ class DublinTraceroute(_dublintraceroute.DublinTraceroute):
         '''Run the traceroute
 
         Example:
-        >>> dub = DublinTraceroute(12345, 33434, "8.8.8.8")
+        >>> dub = DublinTraceroute("8.8.8.8", 12345, 33434)
         >>> results = dub.traceroute()
         >>> print(results)
         {u'flows': {u'33434': [{u'is_last': False,

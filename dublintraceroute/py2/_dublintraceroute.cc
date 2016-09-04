@@ -122,6 +122,16 @@ init_dublintraceroute(void)
     PyObject *module = Py_InitModule("_dublintraceroute", ModuleMethods);
     PyObject *moduleDict = PyModule_GetDict(module);
 
+    /* export the default attributes */
+    PyObject_SetAttrString(module, "DEFAULT_SPORT",
+        PyInt_FromLong(DublinTraceroute::default_srcport));
+    PyObject_SetAttrString(module, "DEFAULT_DPORT",
+        PyInt_FromLong(DublinTraceroute::default_dstport));
+    PyObject_SetAttrString(module, "DEFAULT_NPATHS",
+        PyInt_FromLong(DublinTraceroute::default_npaths));
+    PyObject_SetAttrString(module, "DEFAULT_MAX_TTL",
+        PyInt_FromLong(DublinTraceroute::default_max_ttl));
+
     /* create the DublinTraceroute class */
     PyObject *classDictDT = PyDict_New();
     PyObject *classNameDT = PyString_FromString("DublinTraceroute");
