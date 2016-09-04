@@ -81,11 +81,11 @@ def main():
                                args.max_ttl)
         results = dub.traceroute()
         print_results(results)
-    elif args.plot:
-        results = json.load(args.plot)
+    elif args.command == 'plot':
+        results = json.load(args.jsonfile)
         graph = to_graphviz(results)
         graph.layout('dot')
-        outfile = args.plot.name + '.png'
+        outfile = args.jsonfile.name + '.png'
         graph.draw(outfile)
         print('Saved to {o}'.format(o=outfile))
     else:
