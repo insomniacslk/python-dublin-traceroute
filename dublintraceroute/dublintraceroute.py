@@ -126,13 +126,19 @@ def to_graphviz(traceroute, no_rtt=False):
                         hostname = '\n{h}'.format(h=hop['name'])
                     else:
                         hostname = ''
+
+                    # MPLS labels
                     try:
-                        labels = [str(l['label'])
-                                  for l in received['icmp']['mpls_labels']]
+                        labels = received['icmp']['mpls_labels']
                     except KeyError:
                         labels = []
                     if labels:
-                        mpls = 'MPLS labels: {ll}'.format(ll=', '.join(labels))
+                        mpls = 'MPLS labels: \n'
+                        for label in labels:
+                            mpls += '- {l}, ttl: {t}\n'.format(
+                                l=label['label'],
+                                t=label['ttl'],
+                            )
                     else:
                         mpls = ''
                     nodeattrs['label'] = '{ip}{name}\n{icmp}\n{mpls}'.format(
