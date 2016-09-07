@@ -24,7 +24,7 @@ class DublinTraceroute(_dublintraceroute.DublinTraceroute):
         '''Run the traceroute
 
         Example:
-        >>> dub = DublinTraceroute(12345, 33434, "8.8.8.8")
+        >>> dub = DublinTraceroute("8.8.8.8", 12345, 33434)
         >>> results = dub.traceroute()
         >>> print(results)
         {u'flows': {u'33434': [{u'is_last': False,
@@ -126,10 +126,26 @@ def to_graphviz(traceroute, no_rtt=False):
                         hostname = '\n{h}'.format(h=hop['name'])
                     else:
                         hostname = ''
-                    nodeattrs['label'] = '{ip}{name}\n{icmp}'.format(
+
+                    # MPLS labels
+                    try:
+                        labels = received['icmp']['mpls_labels']
+                    except KeyError:
+                        labels = []
+                    if labels:
+                        mpls = 'MPLS labels: \n'
+                        for label in labels:
+                            mpls += '- {l}, ttl: {t}\n'.format(
+                                l=label['label'],
+                                t=label['ttl'],
+                            )
+                    else:
+                        mpls = ''
+                    nodeattrs['label'] = '{ip}{name}\n{icmp}\n{mpls}'.format(
                         ip=nodename,
                         name=hostname,
-                        icmp=received['icmp']['description']
+                        icmp=received['icmp']['description'],
+                        mpls=mpls,
                     )
                 if index == 0 or hop['is_last']:
                     nodeattrs['shape'] = 'rectangle'

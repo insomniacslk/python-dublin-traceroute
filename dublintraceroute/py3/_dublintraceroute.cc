@@ -190,17 +190,27 @@ static PyTypeObject DublinTracerouteType = {
 PyMODINIT_FUNC
 PyInit__dublintraceroute(void)
 {
-	PyObject* m;
+	PyObject* module;
 
 	if (PyType_Ready(&DublinTracerouteType) < 0)
 		return NULL;
 
-	m = PyModule_Create(&_dublintraceroutemodule);
-	if (m == NULL)
+	module = PyModule_Create(&_dublintraceroutemodule);
+	if (module == NULL)
 		return NULL;
 
 	Py_INCREF(&DublinTracerouteType);
-	PyModule_AddObject(m, "DublinTraceroute",
+	PyModule_AddObject(module, "DublinTraceroute",
 		(PyObject *)&DublinTracerouteType);
-    return m;
+
+	/* export the default attributes */
+	PyObject_SetAttrString(module, "DEFAULT_SPORT",
+			PyLong_FromLong(DublinTraceroute::default_srcport));
+	PyObject_SetAttrString(module, "DEFAULT_DPORT",
+			PyLong_FromLong(DublinTraceroute::default_dstport));
+	PyObject_SetAttrString(module, "DEFAULT_NPATHS",
+			PyLong_FromLong(DublinTraceroute::default_npaths));
+	PyObject_SetAttrString(module, "DEFAULT_MAX_TTL",
+			PyLong_FromLong(DublinTraceroute::default_max_ttl));
+    return module;
 }
