@@ -47,7 +47,7 @@ If you prefer to install `libdublintraceroute` from source instead, see https://
 
 ### Installing dublintraceroute
 
-Onche the prerequisites are installed, there are two ways to install `dublintraceroute` itself. From source, or from PyPI (i.e. using `pip` or `easy_install`)
+Once the prerequisites are installed, there are two ways to install `dublintraceroute` itself. From source, or from PyPI (i.e. using `pip` or `easy_install`)
 
 #### From source
 
