@@ -177,7 +177,7 @@ def to_graphviz(traceroute, no_rtt=False):
             if not no_rtt:
                 if rtt is not None:
                     edgeattrs['label'] += '\n{sec}.{usec} ms'.format(
-                        sec=rtt / 1000, usec=rtt % 1000)
+                        sec=rtt // 1000, usec=rtt % 1000)
             graph.add_edge(nodename, next_nodename)
             graph.get_edge(nodename, next_nodename).attr.update(edgeattrs)
 
