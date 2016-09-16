@@ -4,6 +4,7 @@ import json
 import random
 
 from . import _dublintraceroute
+from .tracerouteresults import TracerouteResults
 
 
 class DublinTraceroute(_dublintraceroute.DublinTraceroute):
@@ -40,7 +41,7 @@ class DublinTraceroute(_dublintraceroute.DublinTraceroute):
         >>>'''
         results = _dublintraceroute.DublinTraceroute.traceroute(self)
         json_results = json.loads(results)
-        return json_results
+        return TracerouteResults(json_results)
 
 
 def print_results(results):

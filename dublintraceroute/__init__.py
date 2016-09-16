@@ -7,3 +7,5 @@ from .dublintraceroute import (
     to_graphviz,
     print_results,
 )
+
+from .tracerouteresults import TracerouteResults
