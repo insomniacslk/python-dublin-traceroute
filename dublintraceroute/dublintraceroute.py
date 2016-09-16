@@ -44,38 +44,6 @@ class DublinTraceroute(_dublintraceroute.DublinTraceroute):
         return TracerouteResults(json_results)
 
 
-def print_results(results):
-    '''
-    Print the traceroute results in a tabular form.
-    '''
-    # tabulate is imported here so it's not a requirement at module load
-    import tabulate
-    headers = ['ttl'] + list(results['flows'].keys())
-    columns = []
-    max_hops = 0
-    for flow_id, hops in results['flows'].items():
-        column = []
-        for hop in hops:
-            try:
-                if hop['received']['ip']['src'] != hop['name']:
-                    name = '\n' + hop['name']
-                else:
-                    name = hop['received']['ip']['src']
-                column.append('{name} ({rtt} usec)'.format(
-                    name=name,
-                    rtt=hop['rtt_usec'])
-                )
-            except TypeError:
-                column.append('*')
-            if hop['is_last']:
-                break
-        max_hops = max(max_hops, len(column))
-        columns.append(column)
-    columns = [range(1, max_hops + 1)] + columns
-    rows = zip(*columns)
-    print(tabulate.tabulate(rows, headers=headers))
-
-
 def to_graphviz(traceroute, no_rtt=False):
     '''
     Convert a traceroute to a graphviz object.

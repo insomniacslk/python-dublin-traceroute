@@ -5,7 +5,6 @@ import json
 
 from .dublintraceroute import (
     DublinTraceroute,
-    print_results,
     to_graphviz,
     _dublintraceroute,
 )
@@ -79,8 +78,7 @@ def main():
               ))
         dub = DublinTraceroute(args.target, args.sport, args.dport, args.npaths,
                                args.max_ttl)
-        results = dub.traceroute()
-        print_results(results)
+        dub.traceroute().pretty_print()
     elif args.command == 'plot':
         results = json.load(args.jsonfile)
         graph = to_graphviz(results)
