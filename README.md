@@ -19,6 +19,8 @@ You need the following dependencies:
 * jsoncpp
 * libdublintraceroute
 
+You can optionally install `pandas` and `matplotlib` for additional analysis functionality.
+
 See the following sections for system-specific instructions.
 
 
