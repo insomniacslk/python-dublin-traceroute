@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 
+import sys
 import copy
 import datetime
 
@@ -63,7 +64,7 @@ class TracerouteResults(dict):
         import pandas
         return pandas.DataFrame(self.flatten())
 
-    def pretty_print(self):
+    def pretty_print(self, file=sys.stdout):
         '''
         Print the traceroute results in a tabular form.
         '''
@@ -91,24 +92,36 @@ class TracerouteResults(dict):
             columns.append(column)
         columns = [range(1, max_hops + 1)] + columns
         rows = zip(*columns)
-        print(tabulate.tabulate(rows, headers=headers))
+        print(tabulate.tabulate(rows, headers=headers), file=file)
 
-    def stats(self):
+    def stats(self, file=sys.stdout):
         df = self.to_dataframe()
         start_ts = df.sent_timestamp.astype(float).min()
         start_time = datetime.datetime.fromtimestamp(start_ts)
         end_ts = df.received_timestamp.astype(float).max()
         end_time = datetime.datetime.fromtimestamp(end_ts)
         total_time = end_time - start_time
+        num_flows = len(df.groupby(['sent_udp_sport', 'sent_udp_dport']).all())
+        num_distinct_flows = len(
+            set(
+                [tuple(s[1].name)
+                 for s in df.groupby(
+                     ['sent_udp_sport', 'sent_udp_dport']
+                 ).__iter__()]
+            ))
         max_ttl = df[df.is_last == True].sent_ip_ttl.dropna().max()
         print(
-            'Start time      : {st}\n'
-            'End time        : {et}\n'
-            'Total time      : {tt}\n'
-            'Max TTL reached : {mttl}\n'
+            'Start time                   : {st}\n'
+            'End time                     : {et}\n'
+            'Total time                   : {tt}\n'
+            'Number of probed net flows   : {nnf}\n'
+            'Number of distinct net flows : {ndnf}\n'
+            'Max TTL reached              : {mttl}\n'
             .format(
                 st=start_time,
                 et=end_time,
                 tt=total_time,
+                nnf=num_flows,
+                ndnf=num_distinct_flows,
                 mttl=max_ttl,
-             ))
+             ), file=file)
