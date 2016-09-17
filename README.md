@@ -196,6 +196,8 @@ python -m dublintraceroute plot trace.json
 
 # Data analysis
 
+## Pandas DataFrame
+
 `python-dublin-traceroute` also supports [pandas](http://pandas.pydata.org/) for data analysis. You can easily analyze a traceroute after converting it to a `pandas.DataFrame`:
 
 ```python
@@ -224,6 +226,28 @@ python -m dublintraceroute plot trace.json
 2     8.8.8.8  192.168.9.20            3  1474070131.253501           33436           12345  
 3     8.8.8.8  192.168.9.20            4  1474070131.253538           33436           12345  
 4     8.8.8.8  192.168.9.20            5  1474070131.253571           33436           12345  
+```
+
+## RTT chart per path
+
+If you have `matplotlib` installed, you can also create diagrams of various types. For example, let's visualize the RTT hop-by-hop for each network path:
+
+```python
+>>> import matplotlib.pyplot as plt
+>>> import dublintraceroute
+>>> df = dublintraceroute.DublinTraceroute('8.8.8.8').traceroute().to_dataframe()
+>>> group = df.groupby('sent_udp_dport')['rtt_usec']
+>>> fig, ax = plt.subplots(figsize=(10, 6))
+>>> for label, sdf in group:
+>>>    sdf.reset_index().plot(ax=ax, label=label, legend=True)
+>>> ax.set_title('RTT per destination port')
+>>> ax.legend(
+>>>    [dport for dport, _ in group],
+>>>    title='destination port',
+>>>    loc='upper left',
+>>> )
+>>> plt.show()
+>>> fig.savefig('rtt.png')
 ```
 
 # Who
