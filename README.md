@@ -75,28 +75,67 @@ target:
 
 ```python
 >>> import dublintraceroute
->>> dublin = dublintraceroute.DublinTraceroute("8.8.8.8")
->>> print dublin
-<DublinTraceroute (target="8.8.8.8", sport=12345, dport=33434, npaths=20, max_ttl=30)
+>>> dublin = dublintraceroute.DublinTraceroute('8.8.8.8', npaths=3)
+>>> print(dublin)
+<DublinTraceroute (target='8.8.8.8', sport=12345, dport=33434, npaths=3, max_ttl=30)>
 >>> results = dublin.traceroute()
->>> import pprint
+>>> type(results)
+<class 'dublintraceroute.tracerouteresults.TracerouteResults'>
 >>> pprint.pprint(results)
 {u'flows': {u'33434': [{u'is_last': False,
-                        u'name': u'192.168.9.1',
+                        u'name': u'gateway',
                         u'nat_id': 0,
                         u'received': {u'icmp': {u'code': 11,
                                                 u'description': u'TTL expired in transit',
+                                                u'extensions': [],
+                                                u'mpls_labels': [],
                                                 u'type': 0},
-                                      u'ip': {u'dst': u'192.168.9.17',
+                                      u'ip': {u'dst': u'192.168.9.20',
+                                              u'id': 1999,
                                               u'src': u'192.168.9.1',
-                                              u'ttl': 64}},
-                        u'rtt_usec': 1881,
+                                              u'ttl': 64},
+                                      u'timestamp': u'1474069492.648438'},
+                        u'rtt_usec': 308179,
                         u'sent': {u'ip': {u'dst': u'8.8.8.8',
-                                          u'src': u'192.168.9.17',
+                                          u'src': u'192.168.9.20',
                                           u'ttl': 1},
+                                  u'timestamp': u'1474069492.340259',
                                   u'udp': {u'dport': 33434,
                                            u'sport': 12345}}},
 ...
+>>> results.pretty_print()
+  ttl  33436                                         33434                                         33435
+-----  --------------------------------------------  --------------------------------------------  --------------------------------------------
+    1  gateway (427110 usec)                         gateway (308179 usec)                         gateway (403034 usec)
+    2  *                                             *                                             *
+    3  188-141-126-1.dynamic.upc.ie (433980 usec)    188-141-126-1.dynamic.upc.ie (355249 usec)    188-141-126-1.dynamic.upc.ie (414672 usec)
+    4  ie-dub01a-ra3-ae34-0.aorta.net (448009 usec)  ie-dub01a-ra3-ae34-0.aorta.net (141946 usec)  ie-dub01a-ra3-ae34-0.aorta.net (414890 usec)
+    5  ie-dub01a-ri1-ae50-0.aorta.net (435168 usec)  84-116-130-142.aorta.net (355207 usec)        84-116-130-142.aorta.net (419248 usec)
+    6  213.46.165.18 (460317 usec)                   213.46.165.18 (355184 usec)                   213.46.165.18 (420044 usec)
+    7  216.239.43.3 (460323 usec)                    216.239.43.3 (355110 usec)                    66.249.95.91 (420293 usec)
+    8  *                                             google-public-dns-a.google.com (355082 usec)  google-public-dns-a.google.com (419689 usec)
+    9  *                                             google-public-dns-a.google.com (355036 usec)  google-public-dns-a.google.com (419759 usec)
+   10  *                                             google-public-dns-a.google.com (354993 usec)  google-public-dns-a.google.com (419943 usec)
+   11  *                                             google-public-dns-a.google.com (354945 usec)  google-public-dns-a.google.com (421734 usec)
+   12  *                                             google-public-dns-a.google.com (381269 usec)  google-public-dns-a.google.com (423064 usec)
+   13  *                                             google-public-dns-a.google.com (381319 usec)  google-public-dns-a.google.com (423643 usec)
+   14  *                                             *                                             *
+   15  *                                             *                                             *
+   16  *                                             *                                             *
+   17  *                                             *                                             *
+   18  *                                             *                                             *
+   19  *                                             *                                             *
+   20  *                                             *                                             *
+   21  *                                             *                                             *
+   22  *                                             *                                             *
+   23  *                                             *                                             *
+   24  *                                             *                                             *
+   25  *                                             *                                             *
+   26  *                                             *                                             *
+   27  *                                             *                                             *
+   28  *                                             *                                             *
+   29  *                                             *                                             *
+   30  *                                             *                                             *
 >>> graph = dublintraceroute.to_graphviz(results)
 >>> graph.draw('traceroute.png')
 >>> graph.write('traceroute.dot')
@@ -105,39 +144,39 @@ target:
 A naive implementation of the traceroute with a oneliner could be:
 
 ```bash
-$ sudo python -c "import dublintraceroute as dub; dub.print_results(dub.DublinTraceroute('8.8.8.8', npaths=3).traceroute())"
-  ttl  33436                                        33434                                      33435
------  -------------------------------------------  -----------------------------------------  -------------------------------------------
-    1  192.168.9.1 (22491 usec)                     192.168.9.1 (8965 usec)                    192.168.9.1 (15755 usec)
-    2  *                                            *                                          *
-    3  188-141-126-1.dynamic.upc.ie (30541 usec)    188-141-126-1.dynamic.upc.ie (16934 usec)  188-141-126-1.dynamic.upc.ie (29183 usec)
-    4  84.116.238.50 (30549 usec)                   84.116.238.50 (17866 usec)                 84.116.238.50 (30824 usec)
-    5  213.46.165.18 (30542 usec)                   213.46.165.18 (17904 usec)                 213.46.165.18 (30862 usec)
-    6  66.249.95.135 (32295 usec)                   66.249.95.113 (17913 usec)                 209.85.250.213 (30873 usec)
-    7  google-public-dns-a.google.com (31419 usec)  *                                          google-public-dns-a.google.com (30873 usec)
-    8  google-public-dns-a.google.com (31455 usec)  *                                          google-public-dns-a.google.com (30873 usec)
-    9  google-public-dns-a.google.com (31455 usec)  *                                          google-public-dns-a.google.com (30866 usec)
-   10  google-public-dns-a.google.com (31450 usec)  *                                          google-public-dns-a.google.com (30865 usec)
-   11  google-public-dns-a.google.com (31444 usec)  *                                          google-public-dns-a.google.com (30862 usec)
-   12  google-public-dns-a.google.com (31443 usec)  *                                          google-public-dns-a.google.com (30861 usec)
-   13  *                                            *                                          *
-   14  *                                            *                                          *
-   15  *                                            *                                          *
-   16  *                                            *                                          *
-   17  *                                            *                                          *
-   18  *                                            *                                          *
-   19  *                                            *                                          *
-   20  *                                            *                                          *
-   21  *                                            *                                          *
-   22  *                                            *                                          *
-   23  *                                            *                                          *
-   24  *                                            *                                          *
-   25  *                                            *                                          *
-   26  *                                            *                                          *
-   27  *                                            *                                          *
-   28  *                                            *                                          *
-   29  *                                            *                                          *
-   30  *                                            *                                          *
+$ sudo python -c "import dublintraceroute; dublintraceroute.DublinTraceroute('8.8.8.8', npaths=3).traceroute().pretty_print()"
+  ttl  33436                                          33434                                         33435
+-----  ---------------------------------------------  --------------------------------------------  --------------------------------------------
+    1  gateway (568664 usec)                          gateway (357115 usec)                         gateway (391580 usec)
+    2  *                                              *                                             *
+    3  188-141-126-1.dynamic.upc.ie (639608 usec)     188-141-126-1.dynamic.upc.ie (357118 usec)    188-141-126-1.dynamic.upc.ie (458835 usec)
+    4  ie-dub01a-ra3-ae34-0.aorta.net (718752 usec)   ie-dub01a-ra3-ae34-0.aorta.net (69098 usec)   ie-dub01a-ra3-ae34-0.aorta.net (416961 usec)
+    5  ie-dub01a-ri1-ae50-0.aorta.net (846613 usec)   84-116-130-142.aorta.net (357079 usec)        84-116-130-142.aorta.net (470277 usec)
+    6  213.46.165.18 (867147 usec)                    213.46.165.18 (363147 usec)                   213.46.165.18 (470332 usec)
+    7  216.239.43.3 (867160 usec)                     216.239.43.3 (363183 usec)                    66.249.95.91 (470292 usec)
+    8  *                                              google-public-dns-a.google.com (363209 usec)  google-public-dns-a.google.com (470243 usec)
+    9  *                                              google-public-dns-a.google.com (363214 usec)  google-public-dns-a.google.com (470228 usec)
+   10  *                                              google-public-dns-a.google.com (363211 usec)  google-public-dns-a.google.com (470172 usec)
+   11  *                                              google-public-dns-a.google.com (363204 usec)  google-public-dns-a.google.com (470146 usec)
+   12  *                                              google-public-dns-a.google.com (363197 usec)  google-public-dns-a.google.com (470125 usec)
+   13  *                                              google-public-dns-a.google.com (363190 usec)  google-public-dns-a.google.com (475719 usec)
+   14  *                                              *                                             *
+   15  *                                              *                                             *
+   16  *                                              *                                             *
+   17  *                                              *                                             *
+   18  *                                              *                                             *
+   19  *                                              *                                             *
+   20  *                                              *                                             *
+   21  google-public-dns-a.google.com (1359710 usec)  *                                             *
+   22  *                                              *                                             *
+   23  *                                              *                                             *
+   24  *                                              *                                             *
+   25  *                                              *                                             *
+   26  *                                              *                                             *
+   27  *                                              *                                             *
+   28  *                                              *                                             *
+   29  *                                              *                                             *
+   30  *                                              *                                             *
 ```
 
 You can also invoke the module directly, with `python -m dublintraceroute --help`.
@@ -145,14 +184,46 @@ You can also invoke the module directly, with `python -m dublintraceroute --help
 For example:
 
 ```bash
-$ sudo python -m dublintraceroute 8.8.8.8
+$ sudo python -m dublintraceroute trace 8.8.8.8
 ...
 ```
 
 then generate a PNG from the traceroute:
 
 ```bash
-python -m dublintraceroute --plot trace.json
+python -m dublintraceroute plot trace.json
+```
+
+# Data analysis
+
+`python-dublin-traceroute` also supports [pandas](http://pandas.pydata.org/) for data analysis. You can easily analyze a traceroute after converting it to a `pandas.DataFrame`:
+
+```python
+>>> import dublintraceroute
+>>> df = dublintraceroute.DublinTraceroute('8.8.8.8', npaths=3).traceroute().to_dataframe()
+>>> import pandas
+>>> pandas.set_option('display.width', 180)
+>>> df.head()
+  is_last                            name  nat_id  received_icmp_code received_icmp_description                           received_icmp_extensions  \
+0   False                         gateway       0                  11    TTL expired in transit                                                 []   
+1   False                                     NaN                 NaN                       NaN                                                NaN   
+2   False    188-141-126-1.dynamic.upc.ie   20530                  11    TTL expired in transit                                                 []   
+3   False  ie-dub01a-ra3-ae34-0.aorta.net   20530                  11    TTL expired in transit  [{u'size': 8, u'type': 1, u'class': 1, u'paylo...   
+4   False  ie-dub01a-ri1-ae50-0.aorta.net   20530                  11    TTL expired in transit                                                 []   
+
+                           received_icmp_mpls_labels  received_icmp_type received_ip_dst  received_ip_id received_ip_src  received_ip_ttl received_timestamp  rtt_usec  \
+0                                                 []                   0    192.168.9.20            1999     192.168.9.1               64  1474070132.380299   1126867   
+1                                                NaN                 NaN             NaN             NaN             NaN              NaN                NaN       NaN   
+2                                                 []                   0    192.168.9.20               0   188.141.126.1              253  1474070132.380312   1126811   
+3  [{u'ttl': 1, u'bottom_of_stack': 1, u'experime...                   0    192.168.9.20            8405   84.116.238.50              252  1474070132.378559   1125021   
+4                                                 []                   0    192.168.9.20               0   84.116.130.97              251  1474070132.380326   1126755   
+
+  sent_ip_dst   sent_ip_src  sent_ip_ttl     sent_timestamp  sent_udp_dport  sent_udp_sport  
+0     8.8.8.8  192.168.9.20            1  1474070131.253432           33436           12345  
+1     8.8.8.8  192.168.9.20            2  1474070131.253468           33436           12345  
+2     8.8.8.8  192.168.9.20            3  1474070131.253501           33436           12345  
+3     8.8.8.8  192.168.9.20            4  1474070131.253538           33436           12345  
+4     8.8.8.8  192.168.9.20            5  1474070131.253571           33436           12345  
 ```
 
 # Who
