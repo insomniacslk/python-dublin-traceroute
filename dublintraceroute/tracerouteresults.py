@@ -1,3 +1,4 @@
+import copy
 import datetime
 
 import tabulate
@@ -7,14 +8,20 @@ class TracerouteResults(dict):
 
     def __init__(self, json_results):
         dict.__init__(self, json_results)
+        self._flattened = None
 
-    def flatten(self):
+    def flatten(self, rebuild=False):
         '''
         Flatten the traceroute JSON data and return them as a list of {k: v}
-        rows
+        rows. NOTE: the flattened object is cached, and it can be modified by
+        other code. If you need an independent copy, call with rebuild=True .
         '''
+        if not rebuild and self._flattened is not None:
+            return self._flattened
+
         rows = []
-        for port, flow in self['flows'].items():
+        results = copy.deepcopy(self)
+        for port, flow in results['flows'].items():
             for packet in flow:
 
                 sent = packet['sent']
@@ -40,6 +47,7 @@ class TracerouteResults(dict):
                         pass
 
                 rows.append(packet)
+        self._flattened = rows
         return rows
 
     def to_dataframe(self):
@@ -87,12 +95,15 @@ class TracerouteResults(dict):
         end_ts = df.received_timestamp.astype(float).max()
         end_time = datetime.datetime.fromtimestamp(end_ts)
         total_time = end_time - start_time
+        max_ttl = df[df.is_last == True].sent_ip_ttl.dropna().max()
         print(
-            'Start time : {st}\n'
-            'End time   : {et}\n'
-            'Total time : {tt}\n'
+            'Start time      : {st}\n'
+            'End time        : {et}\n'
+            'Total time      : {tt}\n'
+            'Max TTL reached : {mttl}\n'
             .format(
                 st=start_time,
                 et=end_time,
                 tt=total_time,
+                mttl=max_ttl,
              ))
