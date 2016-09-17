@@ -47,4 +47,5 @@ script:
   - python setup.py install
 
 after_script:
-  - python -m dublintraceroute --plot .travis/bad.horse.json
+  - python -m dublintraceroute plot .travis/bad.horse.json
+  - python -c 'import json; from dublintraceroute import TracerouteResults; TracerouteResults(json.load(open("bad.horse.json"))).pretty_print()'
