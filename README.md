@@ -250,6 +250,12 @@ If you have `matplotlib` installed, you can also create diagrams of various type
 >>> fig.savefig('rtt.png')
 ```
 
+You will see something like this:
+
+![RTT per destination port](images/rtt.png)
+
+This diagram highlights a latency bump around hops with TTL 3 to 5, and devices not responding at TTL 9 to 12.
+
 # Who
 
 Andrea Barberio, find more about me at https://insomniac.slackware.it
