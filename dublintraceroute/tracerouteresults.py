@@ -1,4 +1,3 @@
-import pandas
 import tabulate
 
 
@@ -44,6 +43,11 @@ class TracerouteResults(dict):
         return rows
 
     def to_dataframe(self):
+        '''
+        Convert traceroute results to a Pandas DataFrame.
+        '''
+        # pandas is imported late because it does not compile yet on PyPy
+        import pandas
         return pandas.DataFrame(self.flatten())
 
     def pretty_print(self):
