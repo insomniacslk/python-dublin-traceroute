@@ -28,6 +28,7 @@ class TracerouteResults(dict):
             for packet in flow:
 
                 sent = packet['sent']
+                del packet['sent']
 
                 packet['sent_timestamp'] = sent['timestamp']
                 for k, v in sent['ip'].items():
@@ -36,6 +37,7 @@ class TracerouteResults(dict):
                     packet['sent_udp_{k}'.format(k=k)] = v
 
                 received = packet['received']
+                del packet['received']
                 if received:
                     packet['received_timestamp'] = received['timestamp']
                     try:
