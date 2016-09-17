@@ -1,3 +1,4 @@
 pygraphviz
 tabulate
+numpy
 pandas
