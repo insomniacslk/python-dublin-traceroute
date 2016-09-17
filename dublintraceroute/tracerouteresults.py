@@ -1,3 +1,5 @@
+import datetime
+
 import tabulate
 
 
@@ -16,7 +18,6 @@ class TracerouteResults(dict):
             for packet in flow:
 
                 sent = packet['sent']
-                del packet['sent']
 
                 packet['sent_timestamp'] = sent['timestamp']
                 for k, v in sent['ip'].items():
@@ -25,7 +26,6 @@ class TracerouteResults(dict):
                     packet['sent_udp_{k}'.format(k=k)] = v
 
                 received = packet['received']
-                del packet['received']
                 if received:
                     packet['received_timestamp'] = received['timestamp']
                     try:
@@ -79,3 +79,20 @@ class TracerouteResults(dict):
         columns = [range(1, max_hops + 1)] + columns
         rows = zip(*columns)
         print(tabulate.tabulate(rows, headers=headers))
+
+    def stats(self):
+        df = self.to_dataframe()
+        start_ts = df.sent_timestamp.astype(float).min()
+        start_time = datetime.datetime.fromtimestamp(start_ts)
+        end_ts = df.received_timestamp.astype(float).max()
+        end_time = datetime.datetime.fromtimestamp(end_ts)
+        total_time = end_time - start_time
+        print(
+            'Start time : {st}\n'
+            'End time   : {et}\n'
+            'Total time : {tt}\n'
+            .format(
+                st=start_time,
+                et=end_time,
+                tt=total_time,
+             ))
