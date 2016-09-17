@@ -184,14 +184,14 @@ You can also invoke the module directly, with `python -m dublintraceroute --help
 For example:
 
 ```bash
-$ sudo python -m dublintraceroute 8.8.8.8
+$ sudo python -m dublintraceroute trace 8.8.8.8
 ...
 ```
 
 then generate a PNG from the traceroute:
 
 ```bash
-python -m dublintraceroute --plot trace.json
+python -m dublintraceroute plot trace.json
 ```
 
 # Data analysis
