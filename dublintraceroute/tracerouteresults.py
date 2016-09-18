@@ -113,15 +113,20 @@ class TracerouteResults(dict):
         max_ttl = df[df.is_last == True].sent_ip_ttl.dropna().max()
         _nat_lengths = [
             len(s[1].nat_id.dropna().drop_duplicates()) for s in group]
+        _visited_hosts = df.received_ip_src.dropna()
+        total_responding_hosts = len(_visited_hosts)
+        total_distinct_responding_hosts = len(_visited_hosts.drop_duplicates())
         print(
-            'Start time                   : {st}\n'
-            'End time                     : {et}\n'
-            'Total time                   : {tt}\n'
-            'Number of probed net flows   : {nnf}\n'
-            'Number of distinct net flows : {ndnf}\n'
-            'Max TTL reached              : {mttl}\n'
-            'Min traversed NATs           : {mtn}\n'
-            'Max traversed NATs           : {mmtn}\n'
+            'Start time                      : {st}\n'
+            'End time                        : {et}\n'
+            'Total time                      : {tt}\n'
+            'Number of probed net flows      : {nnf}\n'
+            'Number of distinct net flows    : {ndnf}\n'
+            'Max TTL reached                 : {mttl}\n'
+            'Min traversed NATs              : {mtn}\n'
+            'Max traversed NATs              : {mmtn}\n'
+            'Total responding hosts          : {trh}\n'
+            'Total distinct responding hosts : {tdrh}\n'
             .format(
                 st=start_time,
                 et=end_time,
@@ -131,4 +136,6 @@ class TracerouteResults(dict):
                 mttl=max_ttl,
                 mtn=min(_nat_lengths),
                 mmtn=max(_nat_lengths),
+                trh=total_responding_hosts,
+                tdrh=total_distinct_responding_hosts,
              ), file=file)
