@@ -111,7 +111,8 @@ class TracerouteResults(dict):
         num_distinct_flows = len(
             set([tuple(s[1].name) for s in group]))
         max_ttl = df[df.is_last == True].sent_ip_ttl.dropna().max()
-        _nat_lengths = [len(s[1].nat_id.drop_duplicates()) for s in group]
+        _nat_lengths = [
+            len(s[1].nat_id.dropna().drop_duplicates()) for s in group]
         print(
             'Start time                   : {st}\n'
             'End time                     : {et}\n'
