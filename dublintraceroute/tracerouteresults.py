@@ -3,6 +3,7 @@ from __future__ import print_function
 
 import sys
 import copy
+import json
 import datetime
 
 import tabulate
@@ -13,6 +14,10 @@ class TracerouteResults(dict):
     def __init__(self, json_results):
         dict.__init__(self, json_results)
         self._flattened = None
+
+    def save(self, filename):
+        with open(filename, 'w') as fd:
+            json.dump(self, fd)
 
     def flatten(self, rebuild=False):
         '''
@@ -101,15 +106,12 @@ class TracerouteResults(dict):
         end_ts = df.received_timestamp.astype(float).max()
         end_time = datetime.datetime.fromtimestamp(end_ts)
         total_time = end_time - start_time
-        num_flows = len(df.groupby(['sent_udp_sport', 'sent_udp_dport']).all())
+        group = df.groupby(['sent_udp_sport', 'sent_udp_dport'])
+        num_flows = len(group.all())
         num_distinct_flows = len(
-            set(
-                [tuple(s[1].name)
-                 for s in df.groupby(
-                     ['sent_udp_sport', 'sent_udp_dport']
-                 ).__iter__()]
-            ))
+            set([tuple(s[1].name) for s in group]))
         max_ttl = df[df.is_last == True].sent_ip_ttl.dropna().max()
+        _nat_lengths = [len(s[1].nat_id.drop_duplicates()) for s in group]
         print(
             'Start time                   : {st}\n'
             'End time                     : {et}\n'
@@ -117,6 +119,8 @@ class TracerouteResults(dict):
             'Number of probed net flows   : {nnf}\n'
             'Number of distinct net flows : {ndnf}\n'
             'Max TTL reached              : {mttl}\n'
+            'Min traversed NATs           : {mtn}\n'
+            'Max traversed NATs           : {mmtn}\n'
             .format(
                 st=start_time,
                 et=end_time,
@@ -124,4 +128,6 @@ class TracerouteResults(dict):
                 nnf=num_flows,
                 ndnf=num_distinct_flows,
                 mttl=max_ttl,
+                mtn=min(_nat_lengths),
+                mmtn=max(_nat_lengths),
              ), file=file)
