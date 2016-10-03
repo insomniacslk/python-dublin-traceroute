@@ -14,6 +14,7 @@ typedef struct {
 	PyObject *sport;
 	PyObject *dport;
 	PyObject *npaths;
+	PyObject *min_ttl;
 	PyObject *max_ttl;
 } DublinTracerouteClass;
 
@@ -34,35 +35,40 @@ DublinTraceroute_init(PyObject *self, PyObject *args,
 	unsigned short sport = DublinTraceroute::default_srcport;
 	unsigned short dport = DublinTraceroute::default_dstport;
 	unsigned short npaths = DublinTraceroute::default_npaths;
+	unsigned short min_ttl = DublinTraceroute::default_min_ttl;
 	unsigned short max_ttl = DublinTraceroute::default_max_ttl;
 	static const char *arglist[] = { "target", "sport", "dport",
-		"npaths", "max_ttl", NULL };
-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|HHHH",
+		"npaths", "min_ttl", "max_ttl", NULL };
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|HHHHH",
 				(char **)&arglist, &target, &sport,
-				&dport, &npaths, &max_ttl)) {
+				&dport, &npaths, &min_ttl, &max_ttl)) {
 		return -1;
 	}
 
 	dublintraceroute = std::make_shared<DublinTraceroute>(
-		DublinTraceroute(target, sport, dport, npaths, max_ttl));
+		DublinTraceroute(target, sport, dport, npaths,
+			min_ttl, max_ttl));
 
 	// Set the instance attributes from the constructor parameters
 	PyObject	*py_sport = PyUnicode_FromString("sport"),
 			*py_dport = PyUnicode_FromString("dport"),
 			*py_target = PyUnicode_FromString("target"),
 			*py_npaths = PyUnicode_FromString("npaths"),
+			*py_min_ttl = PyUnicode_FromString("min_ttl"),
 			*py_max_ttl = PyUnicode_FromString("max_ttl");
 
 	Py_INCREF(py_sport);
 	Py_INCREF(py_dport);
 	Py_INCREF(py_target);
 	Py_INCREF(py_npaths);
+	Py_INCREF(py_min_ttl);
 	Py_INCREF(py_max_ttl);
 
 	PyObject_SetAttr(self, py_sport, Py_BuildValue("i", sport));
 	PyObject_SetAttr(self, py_dport, Py_BuildValue("i", dport));
 	PyObject_SetAttr(self, py_target, Py_BuildValue("s", target));
 	PyObject_SetAttr(self, py_npaths, Py_BuildValue("i", npaths));
+	PyObject_SetAttr(self, py_min_ttl, Py_BuildValue("i", min_ttl));
 	PyObject_SetAttr(self, py_max_ttl, Py_BuildValue("i", max_ttl));
 
 	Py_INCREF(Py_None);
@@ -95,6 +101,8 @@ static PyMemberDef DublinTraceroute_members[] = {
 	 (char *)"starting destination port"},
 	{(char *)"npaths", T_OBJECT_EX, offsetof(DublinTracerouteClass, npaths), 0,
 	 (char *)"number of paths to probe"},
+	{(char *)"min_ttl", T_OBJECT_EX, offsetof(DublinTracerouteClass, min_ttl), 0,
+	 (char *)"minimum TTL"},
 	{(char *)"max_ttl", T_OBJECT_EX, offsetof(DublinTracerouteClass, max_ttl), 0,
 	 (char *)"maximum TTL"},
 	{NULL}  /* Sentinel */
@@ -111,6 +119,7 @@ static PyMethodDef DublinTraceroute_methods[] =
 		"    sport   : the source UDP port (optional, default=12345)\n"
 		"    dport   : the destination UDP port to start with (optional, default=33434)\n"
 		"    npaths  : the number of paths to cover (optional, default=20)\n"
+		"    min_ttl : the minimum Time-To-Live (optiona, default=1)\n"
 		"    max_ttl : the maximum Time-To-Live (optiona, default=30)\n"
 		"\n"
 		"Return value:\n"
@@ -119,7 +128,7 @@ static PyMethodDef DublinTraceroute_methods[] =
 		"Example:\n"
 		">>> dub = DublinTraceroute(\"8.8.8.8\", 12345, 33434)\n"
 		">>> print dub\n"
-		"<DublinTraceroute (target='8.8.8.8', sport=12345, dport=33434, npaths=20, max_ttl=30)>\n"
+		"<DublinTraceroute (target='8.8.8.8', sport=12345, dport=33434, npaths=20, min_ttl=1, max_ttl=30)>\n"
 	},
 	// TODO The docstring here is not inherited by the pure-Python class,
 	//      but it's rewritten. Find a clean alternative to this.
@@ -212,5 +221,7 @@ PyInit__dublintraceroute(void)
 			PyLong_FromLong(DublinTraceroute::default_npaths));
 	PyObject_SetAttrString(module, "DEFAULT_MAX_TTL",
 			PyLong_FromLong(DublinTraceroute::default_max_ttl));
+	PyObject_SetAttrString(module, "DEFAULT_MIN_TTL",
+			PyLong_FromLong(DublinTraceroute::default_min_ttl));
     return module;
 }

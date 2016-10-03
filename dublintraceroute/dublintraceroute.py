@@ -12,12 +12,14 @@ class DublinTraceroute(_dublintraceroute.DublinTraceroute):
     def __str__(self):
         return ('<{self.__class__.__name__} (target={target!r}, '
                 'sport={sport!r}, dport={dport!r}, '
-                'npaths={npaths!r}, max_ttl={max_ttl!r})>'.format(
+                'npaths={npaths!r}, min_ttl={min_ttl}, '
+                'max_ttl={max_ttl!r})>'.format(
                     self=self,
                     target=self.target,
                     sport=self.sport,
                     dport=self.dport,
                     npaths=self.npaths,
+                    min_ttl=self.min_ttl,
                     max_ttl=self.max_ttl,
                     )
                 )
@@ -42,7 +44,7 @@ class DublinTraceroute(_dublintraceroute.DublinTraceroute):
         >>>'''
         results = _dublintraceroute.DublinTraceroute.traceroute(self)
         json_results = json.loads(results)
-        return TracerouteResults(json_results)
+        return TracerouteResults(json_results, min_ttl=self.min_ttl)
 
 
 def to_graphviz(traceroute, no_rtt=False):
