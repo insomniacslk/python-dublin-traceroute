@@ -55,7 +55,14 @@ def parse_args():
         ),
     )
     traceroute_parser.add_argument(
-        '-t', '--max-ttl', type=int,
+        '-t', '--min-ttl', type=int,
+        default=_dublintraceroute.DEFAULT_MIN_TTL,
+        help='The minimum TTL to reach (default: {t})'.format(
+            t=_dublintraceroute.DEFAULT_MIN_TTL,
+        ),
+    )
+    traceroute_parser.add_argument(
+        '-T', '--max-ttl', type=int,
         default=_dublintraceroute.DEFAULT_MAX_TTL,
         help='The maximum TTL to reach (default: {t})'.format(
             t=_dublintraceroute.DEFAULT_MAX_TTL,
@@ -70,14 +77,15 @@ def main():
     if args.command == 'trace':
         print('Traceroute to {t}'.format(t=args.target))
         print('  Source port: {s}, destination port: {d}, num paths: {n}, '
-              'max TTL: {t}'.format(
+              'min TTL: {mint}, max TTL: {maxt}'.format(
                   s=args.sport,
                   d=args.dport,
                   n=args.npaths,
-                  t=args.max_ttl,
+                  mint=args.min_ttl,
+                  maxt=args.max_ttl,
               ))
         dub = DublinTraceroute(args.target, args.sport, args.dport, args.npaths,
-                               args.max_ttl)
+                               args.min_ttl, args.max_ttl)
         dub.traceroute().pretty_print()
     elif args.command == 'plot':
         results = json.load(args.jsonfile)

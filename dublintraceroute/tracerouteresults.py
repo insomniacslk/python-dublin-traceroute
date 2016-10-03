@@ -11,9 +11,10 @@ import tabulate
 
 class TracerouteResults(dict):
 
-    def __init__(self, json_results):
+    def __init__(self, json_results, min_ttl=1):
         dict.__init__(self, json_results)
         self._flattened = None
+        self.min_ttl = min_ttl
 
     def save(self, filename):
         with open(filename, 'w') as fd:
@@ -73,7 +74,6 @@ class TracerouteResults(dict):
         '''
         Print the traceroute results in a tabular form.
         '''
-        # tabulate is imported here so it's not a requirement at module load
         headers = ['ttl'] + list(self['flows'].keys())
         columns = []
         max_hops = 0
@@ -95,7 +95,7 @@ class TracerouteResults(dict):
                     break
             max_hops = max(max_hops, len(column))
             columns.append(column)
-        columns = [range(1, max_hops + 1)] + columns
+        columns = [range(self.min_ttl, self.min_ttl + max_hops)] + columns
         rows = zip(*columns)
         print(tabulate.tabulate(rows, headers=headers), file=file)
 
