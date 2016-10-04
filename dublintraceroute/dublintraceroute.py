@@ -13,7 +13,8 @@ class DublinTraceroute(_dublintraceroute.DublinTraceroute):
         return ('<{self.__class__.__name__} (target={target!r}, '
                 'sport={sport!r}, dport={dport!r}, '
                 'npaths={npaths!r}, min_ttl={min_ttl}, '
-                'max_ttl={max_ttl!r})>'.format(
+                'max_ttl={max_ttl!r}, delay={delay!r}, '
+                'broken_nat={broken_nat!r})>'.format(
                     self=self,
                     target=self.target,
                     sport=self.sport,
@@ -21,6 +22,8 @@ class DublinTraceroute(_dublintraceroute.DublinTraceroute):
                     npaths=self.npaths,
                     min_ttl=self.min_ttl,
                     max_ttl=self.max_ttl,
+                    delay=self.delay,
+                    broken_nat=self.broken_nat,
                     )
                 )
 

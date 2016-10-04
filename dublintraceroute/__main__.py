@@ -68,6 +68,21 @@ def parse_args():
             t=_dublintraceroute.DEFAULT_MAX_TTL,
         ),
     )
+    traceroute_parser.add_argument(
+        '-D', '--delay', type=int,
+        default=_dublintraceroute.DEFAULT_DELAY,
+        help='The inter-packet delay (default: {d})'.format(
+            d=_dublintraceroute.DEFAULT_DELAY,
+        ),
+    )
+    traceroute_parser.add_argument(
+        '-b', '--broken-nat', action='store_true',
+        default=_dublintraceroute.DEFAULT_BROKEN_NAT,
+        help=('The network has a broken NAT (e.g. no payload fixup). Try this '
+              'if you see less hops than expected (default: {b})'.format(
+                  b=_dublintraceroute.DEFAULT_BROKEN_NAT,
+                  )),
+    )
 
     return parser.parse_args()
 
@@ -77,15 +92,19 @@ def main():
     if args.command == 'trace':
         print('Traceroute to {t}'.format(t=args.target))
         print('  Source port: {s}, destination port: {d}, num paths: {n}, '
-              'min TTL: {mint}, max TTL: {maxt}'.format(
+              'min TTL: {mint}, max TTL: {maxt}, delay: {delay}, '
+              'broken NAT: {bn}'.format(
                   s=args.sport,
                   d=args.dport,
                   n=args.npaths,
                   mint=args.min_ttl,
                   maxt=args.max_ttl,
+                  delay=args.delay,
+                  bn=args.broken_nat,
               ))
         dub = DublinTraceroute(args.target, args.sport, args.dport, args.npaths,
-                               args.min_ttl, args.max_ttl)
+                               args.min_ttl, args.max_ttl, args.delay,
+                               args.broken_nat)
         dub.traceroute().pretty_print()
     elif args.command == 'plot':
         results = json.load(args.jsonfile)
