@@ -35,7 +35,7 @@ setup(
     description='NAT-aware multipath traceroute',
     license='BSD',
     url='https://www.dublin-traceroute.net',
-    download_url='https://github.com/insomniacslk/python-dublin-traceroute/archive/v0.3.1.tar.gz',
+    download_url='https://github.com/insomniacslk/python-dublin-traceroute/archive/v0.4.0.tar.gz',
     platforms=['linux', 'darwin'],
     ext_modules=[dublintraceroute],
     keywords=['traceroute', 'networking', 'multipath', 'nat'],
