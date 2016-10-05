@@ -1,6 +1,6 @@
 #!/bin/bash
 cd /tmp
-git clone -b cmake https://github.com/insomniacslk/dublin-traceroute.git
+git clone https://github.com/insomniacslk/dublin-traceroute.git
 cd dublin-traceroute
 if [[ "$TRAVIS_OS_NAME" == "linux" ]]
 then
