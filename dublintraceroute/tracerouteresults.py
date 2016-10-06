@@ -85,10 +85,11 @@ class TracerouteResults(dict):
                         name = '\n' + hop['name']
                     else:
                         name = hop['received']['ip']['src']
-                    column.append('{name} ({rtt} usec)'.format(
+                    column.append('{name} ({rtt_msec}.{rtt_usec} msec)'.format(
                         name=name,
-                        rtt=hop['rtt_usec'])
-                    )
+                        rtt_msec=hop['rtt_usec'] // 1000,
+                        rtt_usec=hop['rtt_usec'] % 1000,
+                    ))
                 except TypeError:
                     column.append('*')
                 if hop['is_last']:
