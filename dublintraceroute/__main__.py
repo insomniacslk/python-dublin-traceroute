@@ -19,7 +19,7 @@ def parse_args():
     # subparser for the `plot` command
     plot_parser = subparsers.add_parser(
         'plot',
-        help='Plot a traceroute from JSON',
+        help='Plot a traceroute from JSON results',
     )
     plot_parser.add_argument(
         'jsonfile', type=argparse.FileType('r'),
@@ -77,14 +77,35 @@ def parse_args():
     )
     traceroute_parser.add_argument(
         '-b', '--broken-nat', action='store_true',
-        default=_dublintraceroute.DEFAULT_BROKEN_NAT,
+        default=bool(_dublintraceroute.DEFAULT_BROKEN_NAT),
         help=('The network has a broken NAT (e.g. no payload fixup). Try this '
               'if you see less hops than expected (default: {b})'.format(
-                  b=_dublintraceroute.DEFAULT_BROKEN_NAT,
+                  b=bool(_dublintraceroute.DEFAULT_BROKEN_NAT),
                   )),
+    )
+    traceroute_parser.add_argument(
+        '-j', '--json', action='store_true', default=False,
+        help='Save results to traceroute_<target>.json',
+    )
+    traceroute_parser.add_argument(
+        '-p', '--plot', action='store_true', default=False,
+        help='Plot results to traceroute_<target>.png',
     )
 
     return parser.parse_args()
+
+
+def plot(results, outfile):
+        graph = to_graphviz(results)
+        graph.layout('dot')
+        graph.draw(outfile)
+        print('Saved to {outfile}'.format(outfile=outfile))
+
+
+def save_json(results, outfile):
+    with open(outfile, 'w') as fd:
+        json.dump(results, fd, indent=2)
+        print('Saved to {outfile}'.format(outfile=outfile))
 
 
 def main():
@@ -105,14 +126,23 @@ def main():
         dub = DublinTraceroute(args.target, args.sport, args.dport, args.npaths,
                                args.min_ttl, args.max_ttl, args.delay,
                                args.broken_nat)
-        dub.traceroute().pretty_print()
+        results = dub.traceroute()
+        results.pretty_print()
+
+        if args.plot:
+            plot(results, 'traceroute_{target}.png'.format(target=args.target))
+
+        if args.json:
+            save_json(
+                results,
+                'traceroute_{target}.json'.format(target=args.target),
+            )
+
     elif args.command == 'plot':
         results = json.load(args.jsonfile)
-        graph = to_graphviz(results)
-        graph.layout('dot')
         outfile = args.jsonfile.name + '.png'
-        graph.draw(outfile)
-        print('Saved to {o}'.format(o=outfile))
+        plot(results, outfile)
+
     else:
         print('No action requested. Try --help')
 
