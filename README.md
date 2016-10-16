@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/insomniacslk/python-dublin-traceroute.svg?branch=master)](https://travis-ci.org/insomniacslk/python-dublin-traceroute)
 
 [![Version](https://img.shields.io/pypi/v/dublintraceroute.svg)](https://pypi.python.org/pypi/dublintraceroute)
-[![Downloads](https://img.shields.io/pypi/dd/dublintraceroute.svg)](https://pypi.python.org/pypi/dublintraceroute)
+[![Downloads](https://insomniac.slackware.it/badges/dublintraceroute)](https://pypi.python.org/pypi/dublintraceroute)
 
 # What
 
