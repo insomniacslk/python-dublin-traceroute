@@ -38,11 +38,11 @@ apt-get install libpcap-dev libjsoncpp-dev libtins-dev libdublintraceroute-dev
 
 * `libtins` and `jsoncpp` are available in brew
 * `libpcap` is already installed on OS X
-* `libdublintraceroute` would like to be in brew, but the authors say that we don't have enough stars to accept the formula. Hence it can be installed from source, or using the formula I wrote. See below or see https://github.com/insomniacslk/dublin-traceroute/blob/master/documentation/readme/README.md#building-on-os-x.
+* `libdublintraceroute` would like to be in homebrew, but their maintainers say that we don't have enough stars on GitHub to accept the formula. Hence it can be installed from source, or using the formula I wrote. See below or see https://github.com/insomniacslk/dublin-traceroute/blob/master/documentation/readme/README.md#building-on-os-x.
 
 ```bash
 brew install jsoncpp libtins
-brew install https://raw.githubusercontent.com/insomniacslk/homebrew/master/Library/Formula/dublin-traceroute.rb
+https://github.com/insomniacslk/dublin-traceroute/blob/master/homebrew/dublin-traceroute.rb
 ```
 
 If you prefer to install `libdublintraceroute` from source instead, see https://dublin-traceroute.net .
