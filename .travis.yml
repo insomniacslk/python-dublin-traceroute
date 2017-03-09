@@ -47,7 +47,7 @@ before_script:
   - .travis/install_dublintraceroute.sh
 
 script:
-  - make test
+  - py.test -v --cov --cov-report term-missing
   - python setup.py install
 
 after_script:
