@@ -40,7 +40,7 @@ DublinTraceroute_init(PyObject *self, PyObject *args,
 	unsigned short min_ttl = DublinTraceroute::default_min_ttl;
 	unsigned short max_ttl = DublinTraceroute::default_max_ttl;
 	unsigned int delay = DublinTraceroute::default_delay;
-	bool broken_nat = DublinTraceroute::default_broken_nat;
+	unsigned int broken_nat = DublinTraceroute::default_broken_nat;
 	static const char *arglist[] = { "target", "sport", "dport",
 		"npaths", "min_ttl", "max_ttl", "delay", "broken_nat", NULL };
 	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|HHHHHHH",
