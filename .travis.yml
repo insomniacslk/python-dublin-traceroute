@@ -40,7 +40,7 @@ addons:
       - clang-3.6
       - libpcap-dev
 
-install
+install:
   - "pip install -r requirements.txt"
 
 before_script:
