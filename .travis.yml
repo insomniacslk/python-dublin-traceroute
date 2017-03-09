@@ -44,6 +44,7 @@ before_script:
   - .travis/install_dublintraceroute.sh
 
 script:
+  - make test
   - python setup.py install
 
 after_script:
