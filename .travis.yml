@@ -40,6 +40,9 @@ addons:
       - clang-3.6
       - libpcap-dev
 
+install
+  - "pip install -r requirements.txt"
+
 before_script:
   - .travis/install_dublintraceroute.sh
 
