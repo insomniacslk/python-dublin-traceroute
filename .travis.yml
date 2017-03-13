@@ -16,7 +16,9 @@ matrix:
     - os: linux
       python: 3.5
     - os: linux
-      python: 3.5-dev
+      python: 3.6
+    - os: linux
+      python: 3.6-dev
     - os: linux
       python: nightly
     - os: linux
@@ -39,12 +41,13 @@ addons:
       - llvm-3.6
       - clang-3.6
       - libpcap-dev
-
-install:
-  - "pip install -r requirements.txt"
+      - graphviz
 
 before_script:
-  - .travis/install_dublintraceroute.sh
+  - .travis/install_dependencies.sh
+  - pip install --upgrade pip
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip install -r requirements_osx.txt; else pip install -r requirements.txt; fi
+  - pip install pytest pytest-cov
 
 script:
   - python setup.py test

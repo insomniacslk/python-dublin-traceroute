@@ -46,5 +46,6 @@ setup(
     tests_requires=[
         'pytest',
         'pytest-cov',
+        'pytest-faulthandler',
         ],
 )

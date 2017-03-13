@@ -12,9 +12,14 @@ then
     brew update
     brew install python
     brew install python3
+    brew install graphviz
 fi
 mkdir build
 cd build
 cmake ..
 make
 sudo make install
+if [[ "$TRAVIS_OS_NAME" == "linux" ]]
+then
+    sudo ldconfig
+fi
