@@ -1,4 +1,2 @@
 pygraphviz
 tabulate
-pytest
-pytest-cov

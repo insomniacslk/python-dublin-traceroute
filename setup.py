@@ -1,6 +1,6 @@
 import sys
 
-from distutils.core import setup, Extension
+from setuptools import setup, Extension
 
 
 if sys.version_info.major >= 3:
@@ -40,4 +40,11 @@ setup(
     ext_modules=[dublintraceroute],
     keywords=['traceroute', 'networking', 'multipath', 'nat'],
     classifiers=[],
+    setup_requires=[
+        'pytest_runner',
+        ],
+    tests_requires=[
+        'pytest>3',
+        'pytest-cov',
+        ],
 )
