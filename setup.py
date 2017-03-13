@@ -44,7 +44,7 @@ setup(
         'pytest_runner',
         ],
     tests_requires=[
-        'pytest>3',
+        'pytest',
         'pytest-cov',
         ],
 )
