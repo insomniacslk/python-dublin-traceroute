@@ -1,0 +1,2 @@
+pygraphviz --global-option=build_ext --global-option="-I/usr/local/include/graphviz/" --global-option="-L/usr/local/lib/graphviz"
+tabulate
