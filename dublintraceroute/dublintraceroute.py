@@ -50,6 +50,31 @@ class DublinTraceroute(_dublintraceroute.DublinTraceroute):
         return TracerouteResults(json_results, min_ttl=self.min_ttl)
 
 
+def probe(target, sport=None, dport=None, npaths=1, ttl=64, delay=None):
+    '''
+    Send one or more probes to a specific host, one per path, and return their
+    RTT as a list of (srcport, dstport, rtt_usec)
+    '''
+    if sport is None:
+        sport = _dublintraceroute.DEFAULT_SPORT
+    if dport is None:
+        dport = _dublintraceroute.DEFAULT_DPORT
+    if npaths is None:
+        npaths = _dublintraceroute.DEFAULT_NPATHS
+    if delay is None:
+        delay = _dublintraceroute.DEFAULT_DELAY
+    d = DublinTraceroute(target, sport, dport, npaths, min_ttl=ttl, max_ttl=ttl,
+                         delay=delay, broken_nat=False)
+    result = d.traceroute()
+    ret = []
+    for flow_id, flows in result['flows'].items():
+        if len(flows) != 1:
+            raise RuntimeError('Expected exactly one probe response for '
+                               'flow {}:{}'.format(sport, dport))
+        flow = flows[0]
+        ret.append((sport, dport, flow['rtt_usec']))
+    return ret
+
 def to_graphviz(traceroute, no_rtt=False):
     '''
     Convert a traceroute to a graphviz object.

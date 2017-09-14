@@ -6,6 +6,7 @@ from .dublintraceroute import (
     _dublintraceroute,
     DublinTraceroute,
     to_graphviz,
+    probe,
 )
 
 from .tracerouteresults import TracerouteResults
