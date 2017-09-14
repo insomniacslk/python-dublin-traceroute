@@ -53,7 +53,7 @@ class DublinTraceroute(_dublintraceroute.DublinTraceroute):
 def probe(target, sport=None, dport=None, npaths=1, ttl=64, delay=None):
     '''
     Send one or more probes to a specific host, one per path, and return their
-    RTT as a list of (srcport, dstport, rtt_usec)
+    RTT as a list of (target_ip, srcport, dstport, rtt_usec)
     '''
     if sport is None:
         sport = _dublintraceroute.DEFAULT_SPORT
@@ -72,8 +72,16 @@ def probe(target, sport=None, dport=None, npaths=1, ttl=64, delay=None):
             raise RuntimeError('Expected exactly one probe response for '
                                'flow {}:{}'.format(sport, dport))
         flow = flows[0]
-        ret.append((sport, dport, flow['rtt_usec']))
-    return ret
+        ret.append(
+            (
+                flow['sent']['ip']['dst'],
+                flow['sent']['udp']['sport'],
+                flow['sent']['udp']['dport'],
+                flow['rtt_usec']
+            ),
+        )
+    # sort by destination port
+    return sorted(ret, key=lambda x: x[2])
 
 def to_graphviz(traceroute, no_rtt=False):
     '''
