@@ -196,6 +196,41 @@ then generate a PNG from the traceroute:
 python -m dublintraceroute plot trace.json
 ```
 
+## Sending probes
+
+You can also send simple probes, without running a full traceroute. This
+translates in sending only one packet per path, at a higher TTL. This
+functionality is wrapped in the `probe` command:
+
+```
+$ sudo python3 -m dublintraceroute probe google.com 
+Sending probes to google.com
+  Source port: 12345, destination port: 33434, num paths: 20, TTL: 64, delay: 10, broken NAT: False
+  #  target           src port    dst port    rtt (usec)
+---  -------------  ----------  ----------  ------------
+  1  216.58.198.78       12345       33434         15705
+  2  216.58.198.78       12345       33435         15902
+  3  216.58.198.78       12345       33436         16127
+  4  216.58.198.78       12345       33437         16512
+  5  216.58.198.78       12345       33438         16465
+  6  216.58.198.78       12345       33439         11271
+  7  216.58.198.78       12345       33440         21903
+  8  216.58.198.78       12345       33441         16811
+  9  216.58.198.78       12345       33442         16863
+ 10  216.58.198.78       12345       33443         16884
+ 11  216.58.198.78       12345       33444         17225
+ 12  216.58.198.78       12345       33445         12127
+ 13  216.58.198.78       12345       33446         12274
+ 14  216.58.198.78       12345       33447         17783
+ 15  216.58.198.78       12345       33448         17933
+ 16  216.58.198.78       12345       33449         12659
+ 17  216.58.198.78       12345       33450         12749
+ 18  216.58.198.78       12345       33451         18041
+ 19  216.58.198.78       12345       33452         12762
+ 20  216.58.198.78       12345       33453         18404
+```
+
+
 # Data analysis
 
 ## Pandas DataFrame
