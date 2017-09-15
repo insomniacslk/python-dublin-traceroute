@@ -50,7 +50,8 @@ class DublinTraceroute(_dublintraceroute.DublinTraceroute):
         return TracerouteResults(json_results, min_ttl=self.min_ttl)
 
 
-def probe(target, sport=None, dport=None, npaths=1, ttl=64, delay=None):
+def probe(target, sport=None, dport=None, npaths=1, ttl=64, delay=None,
+          broken_nat=None):
     '''
     Send one or more probes to a specific host, one per path, and return their
     RTT as a list of (target_ip, srcport, dstport, rtt_usec)
@@ -63,8 +64,10 @@ def probe(target, sport=None, dport=None, npaths=1, ttl=64, delay=None):
         npaths = _dublintraceroute.DEFAULT_NPATHS
     if delay is None:
         delay = _dublintraceroute.DEFAULT_DELAY
+    if broken_nat is None:
+        broken_nat = _dublintraceroute.DEFAULT_BROKEN_NAT
     d = DublinTraceroute(target, sport, dport, npaths, min_ttl=ttl, max_ttl=ttl,
-                         delay=delay, broken_nat=False)
+                         delay=delay, broken_nat=broken_nat)
     result = d.traceroute()
     ret = []
     for flow_id, flows in result['flows'].items():
