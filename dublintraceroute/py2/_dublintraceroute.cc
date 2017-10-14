@@ -65,7 +65,7 @@ static PyObject* DublinTraceroute_traceroute(PyObject *self, PyObject *args)
 {
 	std::shared_ptr<TracerouteResults> results;
 	try {
-		results = std::make_shared<TracerouteResults>(dublintraceroute->traceroute());
+		results = dublintraceroute->traceroute();
 	} catch (DublinTracerouteException &e) {
 		PyErr_SetString(PyExc_RuntimeError, e.what());
 		return NULL;
