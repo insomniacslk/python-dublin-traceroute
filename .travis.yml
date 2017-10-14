@@ -3,8 +3,6 @@ language: python
 sudo: required
 dist: trusty
 
-compiler: clang
-
 matrix:
   include:
     - os: linux
@@ -26,11 +24,11 @@ matrix:
     - os: linux
       python: pypy3
     - os: osx
-      language: generic
       python: python
     - os: osx
-      language: generic
       python: python3
+  allow_failures:
+    - python: nightly
 
 addons:
   apt:
