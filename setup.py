@@ -29,7 +29,7 @@ dublintraceroute = Extension(
 setup(
     name='dublintraceroute',
     packages=['dublintraceroute'],
-    version='0.4.0',
+    version='0.4.2',
     author='Andrea Barberio',
     author_email='insomniac@slackware.it',
     description='NAT-aware multipath traceroute',
