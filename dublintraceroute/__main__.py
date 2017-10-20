@@ -85,12 +85,12 @@ def parse_args():
         help='The maximum TTL to reach (default: %(default)s)'
     )
     traceroute_parser.add_argument(
-        '-j', '--json', action='store_true', default=False,
-        help='Save results to traceroute_<target>.json',
+        '-j', '--json', default=None,
+        help='Save results as JSON to the specified file',
     )
     traceroute_parser.add_argument(
-        '-p', '--plot', action='store_true', default=False,
-        help='Plot results to traceroute_<target>.png',
+        '-p', '--plot', default=None,
+        help='Plot results as PNG to the specified file',
     )
 
     # args specific to the `probe` subparser
@@ -137,13 +137,10 @@ def main():
         results.pretty_print()
 
         if args.plot:
-            plot(results, 'traceroute_{target}.png'.format(target=args.target))
+            plot(results, args.plot)
 
         if args.json:
-            save_json(
-                results,
-                'traceroute_{target}.json'.format(target=args.target),
-            )
+            save_json(results, args.json)
 
     elif args.command == 'probe':
         print('Sending probes to {t}'.format(t=args.target))
