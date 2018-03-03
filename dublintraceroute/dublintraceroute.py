@@ -126,7 +126,7 @@ def to_graphviz(traceroute, no_rtt=False):
                 graph.add_node(nodename, shape='rectangle')
             else:
                 # all the other hops
-                received = hop['received']
+                received = hop.get('received', None)
                 nodeattrs = {}
                 if received is None:
                     nodename = 'NULL{idx}'.format(idx=index)
@@ -170,7 +170,7 @@ def to_graphviz(traceroute, no_rtt=False):
                 # This means that we are at the last hop, no further edge
                 continue
 
-            next_received = nexthop['received']
+            next_received = nexthop.get('received', None)
             edgeattrs = {'color': '#{c:x}'.format(c=color), 'label': ''}
             if next_received is None:
                 next_nodename = 'NULL{idx}'.format(idx=index + 1)
