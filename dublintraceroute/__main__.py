@@ -72,6 +72,12 @@ def parse_args():
                   'this if you see less hops than expected '
                   '(default: %(default)s)')
         )
+        subparser.add_argument(
+            '-i', '--iterate-sport', action='store_true',
+            default=bool(_dublintraceroute.DEFAULT_ITERATE_SPORT),
+            help=('Iterate the source port instead of the destination port '
+                  '(default: %(default)s)')
+        )
 
     # args specific to the `traceroute` subparser
     traceroute_parser.add_argument(
@@ -121,7 +127,7 @@ def main():
         print('Traceroute to {t}'.format(t=args.target))
         print('  Source port: {s}, destination port: {d}, num paths: {n}, '
               'min TTL: {mint}, max TTL: {maxt}, delay: {delay}, '
-              'broken NAT: {bn}'.format(
+              'broken NAT: {bn}, iterate src port: {isrc}'.format(
                   s=args.sport,
                   d=args.dport,
                   n=args.npaths,
@@ -129,10 +135,11 @@ def main():
                   maxt=args.max_ttl,
                   delay=args.delay,
                   bn=args.broken_nat,
+                  isrc=args.iterate_sport,
               ))
         dub = DublinTraceroute(args.target, args.sport, args.dport, args.npaths,
                                args.min_ttl, args.max_ttl, args.delay,
-                               args.broken_nat)
+                               args.broken_nat, args.iterate_sport)
         results = dub.traceroute()
         results.pretty_print()
 
@@ -161,7 +168,6 @@ def main():
             ttl=args.ttl,
             delay=args.delay,
             broken_nat=args.broken_nat,
-
         )
         headers = ['#', 'target', 'src port', 'dst port', 'rtt (usec)']
         print(tabulate.tabulate(results, headers=headers,

@@ -14,7 +14,7 @@ class DublinTraceroute(_dublintraceroute.DublinTraceroute):
                 'sport={sport!r}, dport={dport!r}, '
                 'npaths={npaths!r}, min_ttl={min_ttl}, '
                 'max_ttl={max_ttl!r}, delay={delay!r}, '
-                'broken_nat={broken_nat!r})>'.format(
+                'broken_nat={broken_nat!r}, iterate_sport={iterate_sport!r})>'.format(
                     self=self,
                     target=self.target,
                     sport=self.sport,
@@ -24,6 +24,7 @@ class DublinTraceroute(_dublintraceroute.DublinTraceroute):
                     max_ttl=self.max_ttl,
                     delay=self.delay,
                     broken_nat=self.broken_nat,
+                    iterate_sport=self.iterate_sport,
                     )
                 )
 
@@ -51,7 +52,7 @@ class DublinTraceroute(_dublintraceroute.DublinTraceroute):
 
 
 def probe(target, sport=None, dport=None, npaths=1, ttl=64, delay=None,
-          broken_nat=None):
+          broken_nat=None, iterate_sport=None):
     '''
     Send one or more probes to a specific host, one per path, and return their
     RTT as a list of (target_ip, srcport, dstport, rtt_usec)
@@ -66,8 +67,10 @@ def probe(target, sport=None, dport=None, npaths=1, ttl=64, delay=None,
         delay = _dublintraceroute.DEFAULT_DELAY
     if broken_nat is None:
         broken_nat = _dublintraceroute.DEFAULT_BROKEN_NAT
+    if iterate_sport is None:
+        iterate_sport = _dublintraceroute.DEFAULT_ITERATE_SPORT
     d = DublinTraceroute(target, sport, dport, npaths, min_ttl=ttl, max_ttl=ttl,
-                         delay=delay, broken_nat=broken_nat)
+                         delay=delay, broken_nat=broken_nat, iterate_sport=iterate_sport)
     result = d.traceroute()
     ret = []
     for flow_id, flows in result['flows'].items():

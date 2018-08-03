@@ -18,6 +18,7 @@ typedef struct {
 	PyObject *max_ttl;
 	PyObject *delay;
 	PyObject *broken_nat;
+	PyObject *iterate_sport;
 } DublinTracerouteClass;
 
 
@@ -41,18 +42,19 @@ DublinTraceroute_init(PyObject *self, PyObject *args,
 	unsigned short max_ttl = DublinTraceroute::default_max_ttl;
 	unsigned int delay = DublinTraceroute::default_delay;
 	unsigned int broken_nat = DublinTraceroute::default_broken_nat;
+	unsigned int iterate_sport = DublinTraceroute::default_iterate_sport;
 	static const char *arglist[] = { "target", "sport", "dport",
-		"npaths", "min_ttl", "max_ttl", "delay", "broken_nat", NULL };
-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|HHHHHHH",
+		"npaths", "min_ttl", "max_ttl", "delay", "broken_nat", "iterate_sport", NULL };
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|HHHHHHHH",
 				(char **)&arglist, &target, &sport,
 				&dport, &npaths, &min_ttl, &max_ttl, &delay,
-				&broken_nat)) {
+				&broken_nat, &iterate_sport)) {
 		return -1;
 	}
 
 	dublintraceroute = std::make_shared<DublinTraceroute>(
 		DublinTraceroute(target, sport, dport, npaths,
-			min_ttl, max_ttl, delay, broken_nat));
+			min_ttl, max_ttl, delay, broken_nat, iterate_sport));
 
 	// Set the instance attributes from the constructor parameters
 	PyObject	*py_sport = PyUnicode_FromString("sport"),
@@ -62,7 +64,8 @@ DublinTraceroute_init(PyObject *self, PyObject *args,
 			*py_min_ttl = PyUnicode_FromString("min_ttl"),
 			*py_max_ttl = PyUnicode_FromString("max_ttl"),
 			*py_delay = PyUnicode_FromString("delay"),
-			*py_broken_nat = PyUnicode_FromString("broken_nat");
+			*py_broken_nat = PyUnicode_FromString("broken_nat"),
+			*py_iterate_sport = PyUnicode_FromString("iterate_sport");
 
 	Py_INCREF(py_sport);
 	Py_INCREF(py_dport);
@@ -72,6 +75,7 @@ DublinTraceroute_init(PyObject *self, PyObject *args,
 	Py_INCREF(py_max_ttl);
 	Py_INCREF(py_delay);
 	Py_INCREF(py_broken_nat);
+	Py_INCREF(py_iterate_sport);
 
 	PyObject_SetAttr(self, py_sport, Py_BuildValue("i", sport));
 	PyObject_SetAttr(self, py_dport, Py_BuildValue("i", dport));
@@ -81,6 +85,7 @@ DublinTraceroute_init(PyObject *self, PyObject *args,
 	PyObject_SetAttr(self, py_max_ttl, Py_BuildValue("i", max_ttl));
 	PyObject_SetAttr(self, py_delay, Py_BuildValue("i", delay));
 	PyObject_SetAttr(self, py_broken_nat, PyBool_FromLong(broken_nat));
+	PyObject_SetAttr(self, py_iterate_sport, PyBool_FromLong(iterate_sport));
 
 	Py_INCREF(Py_None);
 	return 0;
@@ -120,6 +125,8 @@ static PyMemberDef DublinTraceroute_members[] = {
 	 (char *)"inter-packet delay"},
 	{(char *)"broken_nat", T_OBJECT_EX, offsetof(DublinTracerouteClass, broken_nat), 0,
 	 (char *)"broken NAT flag"},
+	{(char *)"iterate_sport", T_OBJECT_EX, offsetof(DublinTracerouteClass, iterate_sport), 0,
+	 (char *)"iterate src port flag"},
 	{NULL}  /* Sentinel */
 };
 
@@ -138,6 +145,7 @@ static PyMethodDef DublinTraceroute_methods[] =
 		"    max_ttl : the maximum Time-To-Live (optiona, default=30)\n"
 		"    delay      : the inter-packet delay in milliseconds (optional, default=10ms)"
 		"    broken_nat : the network has a broken NAT configuration (e.g. no payload fixup). Try this if you see less hops than expected"
+		"    iterate_sport	: iterate the source port instead of the destination port"
 		"\n"
 		"Return value:\n"
 		"    a JSON object containing the traceroute data. See example below\n"
@@ -244,5 +252,7 @@ PyInit__dublintraceroute(void)
 			PyLong_FromLong(DublinTraceroute::default_delay));
 	PyObject_SetAttrString(module, "DEFAULT_BROKEN_NAT",
 			PyLong_FromLong(DublinTraceroute::default_broken_nat));
+	PyObject_SetAttrString(module, "DEFAULT_ITERATE_SPORT",
+			PyLong_FromLong(DublinTraceroute::default_iterate_sport));
     return module;
 }
