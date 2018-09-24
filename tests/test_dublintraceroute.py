@@ -26,8 +26,8 @@ def test_init_attrs():
 def test_str():
     d = dublintraceroute.DublinTraceroute('127.0.0.1', sport=12345,
             dport=33434, npaths=10, min_ttl=3, max_ttl=15, delay=100,
-            broken_nat=False)
-    assert str(d) == '''<DublinTraceroute (target='127.0.0.1', sport=12345, dport=33434, npaths=10, min_ttl=3, max_ttl=15, delay=100, broken_nat=False, iterate_sport=False)>'''
+            broken_nat=False, use_srcport_for_path_generation=False)
+    assert str(d) == '''<DublinTraceroute (target='127.0.0.1', sport=12345, dport=33434, npaths=10, min_ttl=3, max_ttl=15, delay=100, broken_nat=False, use_srcport_for_path_generation=False)>'''
 
 
 class MockDublinTraceroute(object):

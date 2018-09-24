@@ -74,7 +74,7 @@ def parse_args():
         )
         subparser.add_argument(
             '-i', '--iterate-sport', action='store_true',
-            default=bool(_dublintraceroute.DEFAULT_ITERATE_SPORT),
+            default=bool(_dublintraceroute.DEFAULT_USE_SRCPORT_FOR_PATH_GENERATION),
             help=('Iterate the source port instead of the destination port '
                   '(default: %(default)s)')
         )
@@ -135,11 +135,11 @@ def main():
                   maxt=args.max_ttl,
                   delay=args.delay,
                   bn=args.broken_nat,
-                  isrc=args.iterate_sport,
+                  isrc=args.use_srcport_for_path_generation,
               ))
         dub = DublinTraceroute(args.target, args.sport, args.dport, args.npaths,
                                args.min_ttl, args.max_ttl, args.delay,
-                               args.broken_nat, args.iterate_sport)
+                               args.broken_nat, args.use_srcport_for_path_generation)
         results = dub.traceroute()
         results.pretty_print()
 

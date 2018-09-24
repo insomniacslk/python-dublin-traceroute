@@ -16,13 +16,13 @@ static PyObject* DublinTraceroute_init(PyObject *self, PyObject *args,
 	unsigned short max_ttl = DublinTraceroute::default_max_ttl;
 	unsigned int delay = DublinTraceroute::default_delay;
 	unsigned int broken_nat = DublinTraceroute::default_broken_nat;
-	unsigned int iterate_sport = DublinTraceroute::default_iterate_sport;
+	unsigned int use_srcport_for_path_generation = DublinTraceroute::default_use_srcport_for_path_generation;
 	static const char *kwlist[] = { "self", "target", "sport", "dport",
-		"npaths", "min_ttl", "max_ttl", "delay", "broken_nat", "iterate_sport", NULL };
+		"npaths", "min_ttl", "max_ttl", "delay", "broken_nat", "use_srcport_for_path_generation", NULL };
 	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "Os|HHHHHHHH",
 				(char **)&kwlist, &self, &target, &sport,
 				&dport, &npaths, &min_ttl, &max_ttl, &delay,
-				&broken_nat, &iterate_sport)) {
+				&broken_nat, &use_srcport_for_path_generation)) {
 		PyErr_BadArgument();
 		return NULL;
 	}
@@ -40,7 +40,7 @@ static PyObject* DublinTraceroute_init(PyObject *self, PyObject *args,
 			*py_max_ttl = PyString_FromString("max_ttl"),
 			*py_delay = PyString_FromString("delay"),
 			*py_broken_nat = PyString_FromString("broken_nat"),
-			*py_iterate_sport = PyUnicode_FromString("iterate_sport");
+			*py_use_srcport_for_path_generation = PyUnicode_FromString("use_srcport_for_path_generation");
 
 	Py_INCREF(py_sport);
 	Py_INCREF(py_dport);
@@ -57,7 +57,7 @@ static PyObject* DublinTraceroute_init(PyObject *self, PyObject *args,
 	PyObject_SetAttr(self, py_max_ttl, Py_BuildValue("i", max_ttl));
 	PyObject_SetAttr(self, py_delay, Py_BuildValue("i", delay));
 	PyObject_SetAttr(self, py_broken_nat, PyBool_FromLong(broken_nat));
-	PyObject_SetAttr(self, py_iterate_sport, PyBool_FromLong(iterate_sport));
+	PyObject_SetAttr(self, py_use_srcport_for_path_generation, PyBool_FromLong(use_srcport_for_path_generation));
 
 	Py_INCREF(Py_None);
 	return Py_None;
@@ -87,15 +87,15 @@ static PyMethodDef DublinTracerouteMethods[] =
 		"Initialize DublinTraceroute\n"
 		"\n"
 		"Arguments:\n"
-		"    target     : the target IP address\n"
-		"    srcport    : the source UDP port (optional, default=12345)\n"
-		"    dstport    : the destination UDP port to start with (optional, default=33434)\n"
-		"    npaths     : the number of paths to cover (optional, default=20)\n"
-		"    min_ttl    : the maximum Time-To-Live (optional, default=1)\n"
-		"    max_ttl    : the maximum Time-To-Live (optional, default=30)\n"
-		"    delay      : the inter-packet delay in milliseconds (optional, default=10ms)"
-		"    broken_nat : the network has a broken NAT configuration (e.g. no payload fixup). Try this if you see less hops than expected"
-		"    iterate_sport	: iterate the source port instead of the destination port"
+		"    target      : the target IP address\n"
+		"    srcport     : the source UDP port (optional, default=12345)\n"
+		"    dstport     : the destination UDP port to start with (optional, default=33434)\n"
+		"    npaths      : the number of paths to cover (optional, default=20)\n"
+		"    min_ttl     : the maximum Time-To-Live (optional, default=1)\n"
+		"    max_ttl     : the maximum Time-To-Live (optional, default=30)\n"
+		"    delay       : the inter-packet delay in milliseconds (optional, default=10ms)"
+		"    broken_nat  : the network has a broken NAT configuration (e.g. no payload fixup). Try this if you see less hops than expected"
+		"    use_srcport_for_path_generation : generate paths using source port instead of destination port"
 		"\n"
 		"Return value:\n"
 		"    a JSON object containing the traceroute data. See example below\n"
@@ -156,8 +156,8 @@ init_dublintraceroute(void)
         PyInt_FromLong(DublinTraceroute::default_delay));
     PyObject_SetAttrString(module, "DEFAULT_BROKEN_NAT",
         PyInt_FromLong(DublinTraceroute::default_broken_nat));
-	PyObject_SetAttrString(module, "DEFAULT_ITERATE_SPORT",
-		PyLong_FromLong(DublinTraceroute::default_iterate_sport));
+	PyObject_SetAttrString(module, "DEFAULT_USE_SRCPORT_FOR_PATH_GENERATION",
+		PyLong_FromLong(DublinTraceroute::default_use_srcport_for_path_generation));
 
     /* create the DublinTraceroute class */
     PyObject *classDictDT = PyDict_New();
