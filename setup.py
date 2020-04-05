@@ -40,6 +40,10 @@ setup(
     ext_modules=[dublintraceroute],
     keywords=['traceroute', 'networking', 'multipath', 'nat'],
     classifiers=[],
+    install_requires=[
+        "pygraphviz",
+        "tabulate",
+    ],
     setup_requires=[
         'pytest_runner',
         ],
