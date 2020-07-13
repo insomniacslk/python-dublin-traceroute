@@ -51,8 +51,8 @@ DublinTraceroute_init(PyObject *self, PyObject *args,
 	}
 
 	dublintraceroute = std::make_shared<DublinTraceroute>(
-		DublinTraceroute(target, sport, dport, npaths,
-			min_ttl, max_ttl, delay, broken_nat));
+		DublinTraceroute(target, DublinTraceroute::default_type, sport,
+			dport, npaths, min_ttl, max_ttl, delay, broken_nat));
 
 	// Set the instance attributes from the constructor parameters
 	PyObject	*py_sport = PyUnicode_FromString("sport"),
