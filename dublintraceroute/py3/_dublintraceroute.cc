@@ -34,6 +34,9 @@ static int
 DublinTraceroute_init(PyObject *self, PyObject *args,
 		PyObject *kwargs) {
 	char *target;
+	// probe_type is set to its default, but not exposed yet in the
+	// constructor.
+	probe_type probe_type = DublinTraceroute::default_type;
 	unsigned short sport = DublinTraceroute::default_srcport;
 	unsigned short dport = DublinTraceroute::default_dstport;
 	unsigned short npaths = DublinTraceroute::default_npaths;
@@ -51,11 +54,12 @@ DublinTraceroute_init(PyObject *self, PyObject *args,
 	}
 
 	dublintraceroute = std::make_shared<DublinTraceroute>(
-		DublinTraceroute(target, sport, dport, npaths,
+		DublinTraceroute(target, probe_type, sport, dport, npaths,
 			min_ttl, max_ttl, delay, broken_nat));
 
 	// Set the instance attributes from the constructor parameters
-	PyObject	*py_sport = PyUnicode_FromString("sport"),
+	PyObject	*py_probe_type = PyUnicode_FromString("probe_type"),
+			*py_sport = PyUnicode_FromString("sport"),
 			*py_dport = PyUnicode_FromString("dport"),
 			*py_target = PyUnicode_FromString("target"),
 			*py_npaths = PyUnicode_FromString("npaths"),
@@ -64,6 +68,7 @@ DublinTraceroute_init(PyObject *self, PyObject *args,
 			*py_delay = PyUnicode_FromString("delay"),
 			*py_broken_nat = PyUnicode_FromString("broken_nat");
 
+	Py_INCREF(py_probe_type);
 	Py_INCREF(py_sport);
 	Py_INCREF(py_dport);
 	Py_INCREF(py_target);
@@ -73,6 +78,7 @@ DublinTraceroute_init(PyObject *self, PyObject *args,
 	Py_INCREF(py_delay);
 	Py_INCREF(py_broken_nat);
 
+	PyObject_SetAttr(self, py_probe_type, Py_BuildValue("i", probe_type));
 	PyObject_SetAttr(self, py_sport, Py_BuildValue("i", sport));
 	PyObject_SetAttr(self, py_dport, Py_BuildValue("i", dport));
 	PyObject_SetAttr(self, py_target, Py_BuildValue("s", target));
