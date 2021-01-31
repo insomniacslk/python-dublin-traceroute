@@ -34,6 +34,13 @@ Once you have enabled those repos, install the dependencies as root:
 apt-get install libpcap-dev libjsoncpp-dev libtins-dev libdublintraceroute-dev
 ```
 
+then run
+```
+pip3 install -r requirements.txt
+```
+replace `pip3` with `pip` or `pip2` if you are still using python 2. note that
+python 2 support will be removed in the future.
+
 ### Prerequisites on OS X
 
 * `libtins` and `jsoncpp` are available in brew
@@ -46,6 +53,14 @@ https://github.com/insomniacslk/dublin-traceroute/blob/master/homebrew/dublin-tr
 ```
 
 If you prefer to install `libdublintraceroute` from source instead, see https://dublin-traceroute.net .
+
+
+Then run
+```
+pip3 install -r requirements_osx.txt
+```
+replace `pip3` with `pip` or `pip2` if you are still using python 2. note that
+python 2 support will be removed in the future.
 
 ### Installing dublintraceroute
 
