@@ -69,7 +69,13 @@ def parse_args():
             '-b', '--broken-nat', action='store_true',
             default=bool(_dublintraceroute.DEFAULT_BROKEN_NAT),
             help=('The network has a broken NAT (e.g. no payload fixup). Try '
-                  'this if you see less hops than expected '
+                  'this if you see fewer hops than expected '
+                  '(default: %(default)s)')
+        )
+        subparser.add_argument(
+            '-i', '--iterate-sport', action='store_true',
+            default=bool(_dublintraceroute.DEFAULT_USE_SRCPORT_FOR_PATH_GENERATION),
+            help=('Iterate the source port instead of the destination port '
                   '(default: %(default)s)')
         )
 
@@ -121,7 +127,7 @@ def main():
         print('Traceroute to {t}'.format(t=args.target))
         print('  Source port: {s}, destination port: {d}, num paths: {n}, '
               'min TTL: {mint}, max TTL: {maxt}, delay: {delay}, '
-              'broken NAT: {bn}'.format(
+              'broken NAT: {bn}, iterate on src port: {isrc}'.format(
                   s=args.sport,
                   d=args.dport,
                   n=args.npaths,
@@ -129,10 +135,12 @@ def main():
                   maxt=args.max_ttl,
                   delay=args.delay,
                   bn=args.broken_nat,
+                  isrc=args.use_srcport_for_path_generation,
               ))
         dub = DublinTraceroute(args.target, args.sport, args.dport, args.npaths,
                                args.min_ttl, args.max_ttl, args.delay,
-                               args.broken_nat)
+                               args.broken_nat,
+                               args.use_srcport_for_path_generation)
         results = dub.traceroute()
         results.pretty_print()
 
