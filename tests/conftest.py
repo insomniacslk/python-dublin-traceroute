@@ -13,6 +13,5 @@ sys.path.insert(
     )
 
 
-@pytest.fixture()
 def json_results():
     return open(SAMPLE_JSON).read()

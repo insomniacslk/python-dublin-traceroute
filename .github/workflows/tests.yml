@@ -1,0 +1,98 @@
+name: Tests
+
+on: [push, pull_request]
+
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        python: ['2.7', '3.7', '3.8', '3.9']
+        os: ['ubuntu-latest']
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          stable: false
+          python-version: ${{ matrix.python }}
+      - name: install dublin-traceroute
+        run: |
+          set -exu
+          sudo apt install -y libtins-dev libjsoncpp-dev libpcap-dev
+          git clone https://github.com/insomniacslk/dublin-traceroute.git
+          pushd dublin-traceroute
+          mkdir build
+          pushd build
+          cmake ..
+          make
+          sudo make install
+          popd
+          popd
+      - name: enter source directory
+        run: cd $GITHUB_WORKSPACE
+      - name: install dependencies
+        run: |
+          set -exu
+          sudo apt install -y graphviz libgraphviz-dev
+          pip install -r requirements.txt
+      - run: python setup.py build
+      - run: python setup.py install
+      - name: print help message
+        run: |
+          set -exu
+          cd /tmp # so it uses the installed module instead of the one in the source directory
+          python -m dublintraceroute --help
+      - name: plot
+        run: |
+          set -exu
+          cd /tmp
+          python -m dublintraceroute plot $GITHUB_WORKSPACE/.ci/bad.horse.json
+      - name: pretty print
+        run: |
+          set -exu
+          cd /tmp
+          python -c "import json; from dublintraceroute import TracerouteResults; TracerouteResults(json.load(open(\"$GITHUB_WORKSPACE/.ci/bad.horse.json\"))).pretty_print()"
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # pytest for python2 was dropped in Ubuntu 20.10, so cannot test it
+        # here.
+        python: ['2.7', '3.7', '3.8', '3.9']
+        os: ['ubuntu-latest']
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          stable: false
+          python-version: ${{ matrix.python }}
+      - name: install dublin-traceroute
+        run: |
+          set -exu
+          sudo apt install -y libtins-dev libjsoncpp-dev libpcap-dev
+          git clone https://github.com/insomniacslk/dublin-traceroute.git
+          pushd dublin-traceroute
+          mkdir build
+          pushd build
+          cmake ..
+          make
+          sudo make install
+          popd
+          popd
+      - name: enter source directory
+        run: cd $GITHUB_WORKSPACE
+      - name: install dependencies
+        run: |
+          set -exu
+          sudo apt-add-repository ppa:ubuntu-toolchain-r/test
+          sudo apt install -y graphviz libgraphviz-dev
+          pip install -r requirements.txt
+          pip install -r testing_requirements.txt
+      - name: run unit tests
+        run: python setup.py test
+      - uses: codecov/codecov-action@v1
+        with:
+          flags: unittests
+          fail_ci_if_error: true
+          verbose: true
