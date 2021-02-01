@@ -8,6 +8,7 @@ std::shared_ptr<DublinTraceroute> dublintraceroute;
 static PyObject* DublinTraceroute_init(PyObject *self, PyObject *args,
 		PyObject *kwargs)
 {
+	std::cerr << "Warning: Python 2 support will be dropped in the future" << std::endl;
 	unsigned short sport = DublinTraceroute::default_srcport;
 	unsigned short dport = DublinTraceroute::default_dstport;
 	char *target;
