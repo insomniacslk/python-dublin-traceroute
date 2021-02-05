@@ -182,7 +182,8 @@ def to_graphviz(traceroute, no_rtt=False):
             else:
                 next_nodename = next_received['ip']['src']
             if index == 0:
-                edgeattrs['label'] = 'dport\n{dp}'.format(dp=flow)
+                u = nexthop['sent']['udp']
+                edgeattrs['label'] = 'srcport {sp}\ndstport {dp}'.format(sp=u['sport'], dp=u['dport'])
             rtt = nexthop['rtt_usec']
             try:
                 if previous_nat_id != nexthop['nat_id']:
