@@ -5,3 +5,5 @@ dist/
 .eggs/
 dublintraceroute.egg-info/
 dublintraceroute/_dublintraceroute.so
+.venv/
+.vscode/
