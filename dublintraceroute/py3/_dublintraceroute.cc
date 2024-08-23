@@ -99,6 +99,12 @@ static PyObject* DublinTraceroute_traceroute(PyObject *self, PyObject *args)
 	std::shared_ptr<TracerouteResults> results;
 	try {
 		results = dublintraceroute->traceroute();
+	} catch (Tins::malformed_packet &e) {
+		PyErr_SetString(PyExc_RuntimeError, e.what());
+		return NULL;
+	} catch (std::runtime_error &e) {
+		PyErr_SetString(PyExc_RuntimeError, e.what());
+		return NULL;
 	} catch (DublinTracerouteException &e) {
 		PyErr_SetString(PyExc_RuntimeError, e.what());
 		return NULL;
