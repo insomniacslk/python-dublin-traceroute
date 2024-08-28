@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python: ['2.7', '3.7', '3.8', '3.9']
+        python: ['3.7', '3.8', '3.9']
         os: ['ubuntu-latest']
     steps:
       - uses: actions/checkout@v2
@@ -59,7 +59,7 @@ jobs:
       matrix:
         # pytest for python2 was dropped in Ubuntu 20.10, so cannot test it
         # here.
-        python: ['2.7', '3.7', '3.8', '3.9']
+        python: ['3.7', '3.8', '3.9']
         os: ['ubuntu-latest']
     steps:
       - uses: actions/checkout@v2
@@ -91,7 +91,9 @@ jobs:
           pip install -r testing_requirements.txt
       - name: run unit tests
         run: python setup.py test
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v4.2.0
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           flags: unittests
           fail_ci_if_error: true
