@@ -62,6 +62,24 @@ pip3 install -r requirements_osx.txt
 replace `pip3` with `pip` or `pip2` if you are still using python 2. note that
 python 2 support will be removed in the future.
 
+If the installation fails on `pygraphviz`, try one of the two following methods:
+
+Method 1:
+```
+export CFLAGS="-I $(brew --prefix graphviz)/include"
+export LDFLAGS="-L $(brew --prefix graphviz)/lib"
+pip install -r requirements_osx.txt
+```
+
+Method 2:
+```
+pip install \
+    --global-option=build_ext \
+    --global-option="-I$(brew --prefix graphviz)/include/" \
+    --global-option="-L$(brew --prefix graphviz)/lib/" \
+    pygraphviz
+```
+
 ### Installing dublintraceroute
 
 Once the prerequisites are installed, there are two ways to install `dublintraceroute` itself. From source, or from PyPI (i.e. using `pip` or `easy_install`)
