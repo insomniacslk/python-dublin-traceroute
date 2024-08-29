@@ -22,6 +22,8 @@ typedef struct {
 } DublinTracerouteClass;
 
 
+static PyObject *PyDublinTracerouteException = NULL;
+
 static PyModuleDef _dublintraceroutemodule = {
 	PyModuleDef_HEAD_INIT,
 	"_dublintraceroute",
@@ -102,12 +104,16 @@ static PyObject* DublinTraceroute_traceroute(PyObject *self, PyObject *args)
 	} catch (Tins::malformed_packet &e) {
 		PyErr_SetString(PyExc_RuntimeError, e.what());
 		return NULL;
-	} catch (std::runtime_error &e) {
-		PyErr_SetString(PyExc_RuntimeError, e.what());
 		return NULL;
 	} catch (DublinTracerouteException &e) {
-		PyErr_SetString(PyExc_RuntimeError, e.what());
+		PyErr_SetString(PyDublinTracerouteException, e.what());
 		return NULL;
+	} catch (std::invalid_argument &e) {
+		PyErr_SetString(PyExc_ValueError, e.what());
+	} catch (std::out_of_range &e) {
+		PyErr_SetString(PyExc_IndexError, e.what());
+	} catch (std::runtime_error &e) {
+		PyErr_SetString(PyExc_RuntimeError, e.what());
 	}
 
 	PyObject *py_results = PyUnicode_FromString(results->to_json().c_str());
@@ -244,6 +250,12 @@ PyInit__dublintraceroute(void)
 	Py_INCREF(&DublinTracerouteType);
 	PyModule_AddObject(module, "DublinTraceroute",
 		(PyObject *)&DublinTracerouteType);
+
+	PyDublinTracerouteException = PyErr_NewException("_dublintraceroute.DublinTracerouteException", NULL, NULL);
+	if (PyDublinTracerouteException == NULL) {
+		return NULL;
+	}
+	PyModule_AddObject(module, "DublinTracerouteException", PyDublinTracerouteException);
 
 	/* export the default attributes */
 	PyObject_SetAttrString(module, "DEFAULT_SPORT",
