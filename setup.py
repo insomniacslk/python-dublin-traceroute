@@ -16,6 +16,7 @@ dublintraceroute = Extension(
     include_dirs=[
         '../include',
         '/usr/include/jsoncpp',  # specific to debian-like systems
+        '/opt/homebrew/include', #specific to MacOS
     ],
     sources=sources,
     extra_compile_args=[
